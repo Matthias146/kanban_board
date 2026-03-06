@@ -1,0 +1,20 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">Kanban B2B</div>
+
+    <nav class="nav">
+      <a routerLink="/board" routerLinkActive="active">Board</a>
+    </nav>
+  </aside>
+
+  <div class="content">
+    <header class="topbar">
+      <h1>Kanban Board</h1>
+      <a routerLink="/login" class="logout-link">Login</a>
+    </header>
+
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

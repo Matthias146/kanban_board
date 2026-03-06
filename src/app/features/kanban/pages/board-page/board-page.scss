@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+.board-page {
+  display: grid;
+  gap: 24px;
+}
+
+.board-header {
+  h2 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0;
+    color: #6b7280;
+  }
+}
+
+.board-placeholder {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.column {
+  min-height: 320px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}

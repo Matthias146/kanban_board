@@ -1,3 +1,30 @@
 import { Routes } from '@angular/router';
+import { LoginPage } from './features/auth/pages/login-page/login-page';
+import { AppShell } from './core/layout/app-shell/app-shell';
+import { BoardPage } from './features/kanban/pages/board-page/board-page';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginPage,
+  },
+  {
+    path: '',
+    component: AppShell,
+    children: [
+      {
+        path: '',
+        redirectTo: 'board',
+        pathMatch: 'full',
+      },
+      {
+        path: 'board',
+        component: BoardPage,
+      },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: 'board',
+  },
+];

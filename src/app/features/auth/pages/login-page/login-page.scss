@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: #f5f7fb;
+}
+
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: min(100%, 420px);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+
+  h2 {
+    margin: 0 0 12px;
+  }
+
+  p {
+    margin: 0 0 24px;
+    color: #6b7280;
+  }
+
+  button {
+    width: 100%;
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    background: #111827;
+    color: white;
+  }
+}
