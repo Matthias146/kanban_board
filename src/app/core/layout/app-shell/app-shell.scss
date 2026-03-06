@@ -1,3 +1,5 @@
+@use "../../../../styles/abstracts/variables" as v;
+
 :host {
   display: block;
   min-height: 100dvh;
@@ -7,40 +9,40 @@
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100dvh;
-  background: #f5f7fb;
-  color: #1f2937;
+  background: v.$color-bg;
+  color: v.$color-text;
 }
 
 .sidebar {
-  background: #111827;
-  color: #fff;
-  padding: 24px 20px;
+  background: v.$color-sidebar;
+  color: v.$color-sidebar-text;
+  padding: v.$space-6 v.$space-5;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 
   .logo {
     font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 32px;
+    margin-bottom: v.$space-8;
   }
 
   .nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: v.$space-2;
 
     a {
-      color: #d1d5db;
+      color: v.$color-sidebar-muted;
       text-decoration: none;
       padding: 10px 12px;
-      border-radius: 10px;
+      border-radius: v.$radius-sm;
       transition:
-        background 180ms ease,
-        color 180ms ease;
+        background v.$transition-fast,
+        color v.$transition-fast;
 
       &:hover,
       &.active {
         background: rgba(255, 255, 255, 0.08);
-        color: #fff;
+        color: v.$color-sidebar-text;
       }
     }
   }
@@ -56,9 +58,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0 v.$space-6;
+  background: v.$color-surface;
+  border-bottom: 1px solid v.$color-border;
 
   h1 {
     font-size: 1.25rem;
@@ -67,11 +69,11 @@
 
   .logout-link {
     text-decoration: none;
-    color: #2563eb;
+    color: v.$color-primary;
     font-weight: 600;
   }
 }
 
 .main-content {
-  padding: 24px;
+  padding: v.$space-6;
 }
