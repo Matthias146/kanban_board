@@ -10,7 +10,13 @@
   <div class="content">
     <header class="topbar">
       <h1>Kanban Board</h1>
-      <a routerLink="/login" class="logout-link">Login</a>
+
+      <div class="topbar-actions">
+        <span class="user-name">
+          {{ authService.user()?.name || 'Demo User' }}
+        </span>
+        <button type="button" class="logout-button" (click)="logout()">Logout</button>
+      </div>
     </header>
 
     <main class="main-content">

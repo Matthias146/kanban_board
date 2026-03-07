@@ -1,21 +1,46 @@
 <section class="login-page">
   <div class="login-card">
     <h2>Login</h2>
-    <p>Frontend-only Auth kommt im nächsten Milestone.</p>
+    <p>Demo-Login für das Portfolio-Projekt.</p>
 
-    <form class="login-form">
+    <form class="login-form" (submit)="login()">
       <div class="form-field">
         <label class="form-label" for="email">E-Mail</label>
-        <input id="email" class="form-control" type="email" placeholder="demo@company.com" />
-        <span class="form-hint">Nutze später unseren Demo-Login.</span>
+        <input
+          id="email"
+          class="form-control"
+          type="email"
+          [formField]="loginForm.email"
+          placeholder="demo@company.com"
+        />
+
+        @if (loginForm.email().touched() && !loginForm.email().valid()) {
+          <span class="form-error">
+            {{ loginForm.email().errors()[0]?.message }}
+          </span>
+        } @else {
+          <span class="form-hint">Nutze den vorbereiteten Demo-Login.</span>
+        }
       </div>
 
       <div class="form-field">
         <label class="form-label" for="password">Passwort</label>
-        <input id="password" class="form-control" type="password" placeholder="••••••••" />
+        <input
+          id="password"
+          class="form-control"
+          type="password"
+          [formField]="loginForm.password"
+          placeholder="••••••••"
+        />
+
+        @if (loginForm.password().touched() && !loginForm.password().valid()) {
+          <span class="form-error">
+            {{ loginForm.password().errors()[0]?.message }}
+          </span>
+        }
       </div>
 
-      <button type="button">Demo Login</button>
+      <button type="submit">Demo Login</button>
     </form>
   </div>
 </section>

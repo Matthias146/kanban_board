@@ -66,11 +66,33 @@
     font-size: 1.25rem;
     margin: 0;
   }
+}
 
-  .logout-link {
-    text-decoration: none;
-    color: v.$color-primary;
-    font-weight: 600;
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: v.$space-4;
+}
+
+.user-name {
+  color: v.$color-text-muted;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.logout-button {
+  border: 1px solid v.$color-border;
+  background: v.$color-surface;
+  color: v.$color-text;
+  padding: 0.625rem 1rem;
+  border-radius: v.$radius-sm;
+  font-weight: 600;
+  transition:
+    background v.$transition-fast,
+    border-color v.$transition-fast;
+
+  &:hover {
+    background: v.$color-surface-alt;
   }
 }
 

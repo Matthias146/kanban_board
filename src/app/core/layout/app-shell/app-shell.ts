@@ -1,10 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
-  selector: 'app-app-shell',
+  selector: 'app-shell',
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })
-export class AppShell {}
+export class AppShell {
+  protected readonly authService = inject(AuthService);
+
+  logout(): void {
+    this.authService.logout();
+  }
+}
