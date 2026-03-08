@@ -1,0 +1,95 @@
+<div
+  class="dialog-backdrop"
+  tabindex="0"
+  role="button"
+  aria-label="Dialog schließen"
+  (click)="close()"
+  (keydown.enter)="close()"
+  (keydown.space)="close()"
+>
+  <section
+    class="dialog-card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="edit-task-title"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+  >
+    <header class="dialog-header">
+      <div>
+        <h3 id="edit-task-title">Task bearbeiten</h3>
+        <p>Bestehende Aufgabe anpassen oder löschen.</p>
+      </div>
+
+      <button type="button" class="icon-button" (click)="close()" aria-label="Dialog schließen">
+        ✕
+      </button>
+    </header>
+
+    <form class="dialog-form" (submit)="submit($event)">
+      <div class="form-field">
+        <label class="form-label" for="edit-title">Titel</label>
+        <input
+          id="edit-title"
+          class="form-control"
+          type="text"
+          [formField]="taskForm.title"
+          placeholder="Task-Titel"
+        />
+
+        @if (taskForm.title().touched() && !taskForm.title().valid()) {
+          <span class="form-error">{{ titleErrors()[0]?.message }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="edit-description">Beschreibung</label>
+        <textarea
+          id="edit-description"
+          class="form-control"
+          [formField]="taskForm.description"
+          placeholder="Beschreibung"
+        ></textarea>
+
+        @if (taskForm.description().touched() && !taskForm.description().valid()) {
+          <span class="form-error">{{ descriptionErrors()[0]?.message }}</span>
+        }
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="edit-priority">Priorität</label>
+          <select id="edit-priority" class="form-control" [formField]="taskForm.priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="edit-assignee">Assignee</label>
+          <input
+            id="edit-assignee"
+            class="form-control"
+            type="text"
+            [formField]="taskForm.assignee"
+            placeholder="z. B. Matthias"
+          />
+
+          @if (taskForm.assignee().touched() && !taskForm.assignee().valid()) {
+            <span class="form-error">{{ assigneeErrors()[0]?.message }}</span>
+          }
+        </div>
+      </div>
+
+      <footer class="dialog-actions">
+        <button type="button" class="danger-button" (click)="deleteTask()">Löschen</button>
+
+        <div class="dialog-actions-right">
+          <button type="button" class="secondary-button" (click)="close()">Abbrechen</button>
+          <button type="submit" class="primary-button">Änderungen speichern</button>
+        </div>
+      </footer>
+    </form>
+  </section>
+</div>

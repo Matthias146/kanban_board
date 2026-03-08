@@ -1,0 +1,98 @@
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { BoardStore } from '../../data-access/board.store';
+import { Task } from '../../models/kanban.models';
+import { form, FormField, minLength, required } from '@angular/forms/signals';
+import { TaskPriority } from '../../models/kanban.models';
+
+interface EditTaskFormModel {
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  assignee: string;
+}
+
+@Component({
+  selector: 'app-edit-task-dialog',
+  imports: [FormField],
+  templateUrl: './edit-task-dialog.html',
+  styleUrl: './edit-task-dialog.scss',
+})
+export class EditTaskDialog {
+  private readonly boardStore = inject(BoardStore);
+
+  readonly task = input.required<Task>();
+  readonly closed = output<void>();
+
+  protected readonly formModel = signal<EditTaskFormModel>({
+    title: '',
+    description: '',
+    priority: 'medium',
+    assignee: '',
+  });
+
+  protected readonly taskForm = form(this.formModel, (path) => {
+    required(path.title, {
+      message: 'Bitte gib einen Task-Titel ein.',
+    });
+    minLength(path.title, 3, {
+      message: 'Der Titel muss mindestens 3 Zeichen lang sein.',
+    });
+
+    required(path.description, {
+      message: 'Bitte gib eine Beschreibung ein.',
+    });
+    minLength(path.description, 10, {
+      message: 'Die Beschreibung muss mindestens 10 Zeichen lang sein.',
+    });
+
+    required(path.assignee, {
+      message: 'Bitte gib eine verantwortliche Person ein.',
+    });
+  });
+
+  protected readonly titleErrors = computed(() => this.taskForm.title().errors());
+  protected readonly descriptionErrors = computed(() => this.taskForm.description().errors());
+  protected readonly assigneeErrors = computed(() => this.taskForm.assignee().errors());
+
+  constructor() {
+    effect(() => {
+      const currentTask = this.task();
+
+      this.formModel.set({
+        title: currentTask.title,
+        description: currentTask.description,
+        priority: currentTask.priority,
+        assignee: currentTask.assignee,
+      });
+    });
+  }
+
+  protected close(): void {
+    this.closed.emit();
+  }
+
+  protected submit(event: Event): void {
+    event.preventDefault();
+
+    if (!this.taskForm().valid()) {
+      this.taskForm().markAsTouched();
+      return;
+    }
+
+    const value = this.formModel();
+
+    this.boardStore.updateTask(this.task().id, {
+      title: value.title,
+      description: value.description,
+      priority: value.priority,
+      assignee: value.assignee,
+    });
+
+    this.closed.emit();
+  }
+
+  protected deleteTask(): void {
+    this.boardStore.deleteTask(this.task().id);
+    this.closed.emit();
+  }
+}
