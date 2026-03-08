@@ -4,6 +4,14 @@
       <h2>Board Overview</h2>
       <p>{{ boardStore.totalTaskCount() }} Tasks im aktuellen Board.</p>
     </div>
+
+    <button
+      type="button"
+      class="add-task-button add-task-button--global"
+      (click)="openCreateTaskDialog()"
+    >
+      + Task erstellen
+    </button>
   </div>
 
   <div class="board-columns">
@@ -14,15 +22,18 @@
             <h3>{{ column.title }}</h3>
             <span class="task-count">{{ column.tasks.length }}</span>
           </div>
-
-          <button type="button" class="add-task-button" (click)="openCreateTaskDialog(column.id)">
-            + Task
-          </button>
         </header>
 
         <div class="task-list">
           @for (task of column.tasks; track task.id) {
-            <article class="task-card">
+            <article
+              class="task-card"
+              tabindex="0"
+              role="button"
+              (click)="openEditTaskDialog(task)"
+              (keydown.enter)="openEditTaskDialog(task)"
+              (keydown.space)="openEditTaskDialog(task)"
+            >
               <div class="task-card-top">
                 <span class="priority" [class]="'priority priority--' + task.priority">
                   {{ task.priority }}
@@ -41,14 +52,14 @@
           }
         </div>
       </article>
-
-      @if (activeCreateTaskColumnId() === column.id) {
-        <app-create-task-dialog
-          [columnId]="column.id"
-          [columnTitle]="column.title"
-          (closed)="closeCreateTaskDialog()"
-        />
-      }
     }
   </div>
+
+  @if (isCreateTaskDialogOpen()) {
+    <app-create-task-dialog (closed)="closeCreateTaskDialog()" />
+  }
+
+  @if (activeTask(); as task) {
+    <app-edit-task-dialog [task]="task" (closed)="closeEditTaskDialog()" />
+  }
 </section>

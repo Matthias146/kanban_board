@@ -80,34 +80,14 @@ export class BoardStore {
     }));
   }
 
-  addTask(columnId: string, taskInput: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): void {
-    const column = this.boardState().columns[columnId];
+  addTaskToDefaultColumn(taskInput: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): void {
+    const firstColumnId = this.boardState().columnOrder[0];
 
-    if (!column) {
+    if (!firstColumnId) {
       return;
     }
 
-    const newTask = createTask(
-      taskInput.title.trim(),
-      taskInput.description.trim(),
-      taskInput.priority,
-      taskInput.assignee.trim(),
-    );
-
-    this.boardState.update((board) => ({
-      ...board,
-      tasks: {
-        ...board.tasks,
-        [newTask.id]: newTask,
-      },
-      columns: {
-        ...board.columns,
-        [columnId]: {
-          ...board.columns[columnId],
-          taskIds: [...board.columns[columnId].taskIds, newTask.id],
-        },
-      },
-    }));
+    this.addTaskToColumn(firstColumnId, taskInput);
   }
 
   updateTask(
@@ -165,5 +145,38 @@ export class BoardStore {
 
   resetBoard(): void {
     this.boardState.set(createInitialBoard());
+  }
+
+  private addTaskToColumn(
+    columnId: string,
+    taskInput: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>,
+  ): void {
+    const column = this.boardState().columns[columnId];
+
+    if (!column) {
+      return;
+    }
+
+    const newTask = createTask(
+      taskInput.title.trim(),
+      taskInput.description.trim(),
+      taskInput.priority,
+      taskInput.assignee.trim(),
+    );
+
+    this.boardState.update((board) => ({
+      ...board,
+      tasks: {
+        ...board.tasks,
+        [newTask.id]: newTask,
+      },
+      columns: {
+        ...board.columns,
+        [columnId]: {
+          ...board.columns[columnId],
+          taskIds: [...board.columns[columnId].taskIds, newTask.id],
+        },
+      },
+    }));
   }
 }

@@ -1,6 +1,6 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
-import { BoardStore } from '../../data-access/board.store';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
+import { BoardStore } from '../../data-access/board.store';
 import { TaskPriority } from '../../models/kanban.models';
 
 interface CreateTaskFormModel {
@@ -19,8 +19,6 @@ interface CreateTaskFormModel {
 export class CreateTaskDialog {
   private readonly boardStore = inject(BoardStore);
 
-  readonly columnId = input.required<string>();
-  readonly columnTitle = input.required<string>();
   readonly closed = output<void>();
 
   protected readonly formModel = signal<CreateTaskFormModel>({
@@ -68,7 +66,7 @@ export class CreateTaskDialog {
 
     const value = this.formModel();
 
-    this.boardStore.addTask(this.columnId(), {
+    this.boardStore.addTaskToDefaultColumn({
       title: value.title,
       description: value.description,
       priority: value.priority,
