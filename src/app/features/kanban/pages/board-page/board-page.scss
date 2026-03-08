@@ -102,6 +102,12 @@
   border-radius: v.$radius-md;
   background: v.$color-surface-alt;
   box-shadow: v.$shadow-sm;
+  cursor: pointer;
+  transition:
+    transform v.$transition-fast,
+    box-shadow v.$transition-fast,
+    border-color v.$transition-fast,
+    background v.$transition-fast;
 
   h4 {
     margin: 0;
@@ -114,11 +120,28 @@
     font-size: 0.95rem;
     color: v.$color-text-muted;
   }
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: v.$shadow-md;
+    border-color: v.$color-primary;
+    background: v.$color-surface;
+    outline: none;
+  }
 }
 
 .task-card-top {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-3;
+}
+
+.edit-hint {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: v.$color-primary;
+  opacity: 0.85;
 }
 
 .priority {
@@ -158,6 +181,11 @@
   color: v.$color-text-muted;
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+.task-action-hint {
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
 }
 
 .empty-state {

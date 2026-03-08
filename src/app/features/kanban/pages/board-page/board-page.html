@@ -38,6 +38,8 @@
                 <span class="priority" [class]="'priority priority--' + task.priority">
                   {{ task.priority }}
                 </span>
+
+                <span class="edit-hint">Bearbeiten</span>
               </div>
 
               <h4>{{ task.title }}</h4>
@@ -45,6 +47,7 @@
 
               <footer class="task-meta">
                 <span>{{ task.assignee }}</span>
+                <span class="task-action-hint">Klick oder Enter</span>
               </footer>
             </article>
           } @empty {
