@@ -46,10 +46,32 @@
   align-items: center;
   justify-content: space-between;
   gap: v.$space-3;
+}
+
+.column-header-meta {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
 
   h3 {
     margin: 0;
     font-size: 1rem;
+  }
+}
+
+.add-task-button {
+  border: 1px solid v.$color-border;
+  background: v.$color-surface-alt;
+  color: v.$color-text;
+  padding: 0.625rem 0.875rem;
+  border-radius: v.$radius-sm;
+  font-weight: 600;
+  transition:
+    background v.$transition-fast,
+    border-color v.$transition-fast;
+
+  &:hover {
+    background: v.$color-surface;
   }
 }
 

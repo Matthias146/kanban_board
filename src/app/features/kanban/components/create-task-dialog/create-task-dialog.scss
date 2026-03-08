@@ -1,0 +1,94 @@
+@use "../../../../../styles/abstracts/variables" as v;
+
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+}
+
+.dialog-backdrop {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: v.$space-6;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.dialog-card {
+  width: min(100%, 640px);
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-lg;
+  padding: v.$space-6;
+  display: grid;
+  gap: v.$space-6;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: v.$space-4;
+
+  h3 {
+    margin: 0 0 0.375rem;
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin: 0;
+    color: v.$color-text-muted;
+  }
+}
+
+.icon-button {
+  min-width: 40px;
+  min-height: 40px;
+  border: 1px solid v.$color-border;
+  background: v.$color-surface;
+  color: v.$color-text;
+  border-radius: 999px;
+  font-size: 1rem;
+}
+
+.dialog-form {
+  display: grid;
+  gap: v.$space-5;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$space-4;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: v.$space-3;
+}
+
+.secondary-button,
+.primary-button {
+  border: 0;
+  padding: 0.75rem 1rem;
+  border-radius: v.$radius-sm;
+  font-weight: 600;
+}
+
+.secondary-button {
+  background: v.$color-surface-alt;
+  color: v.$color-text;
+  border: 1px solid v.$color-border;
+}
+
+.primary-button {
+  background: v.$color-primary;
+  color: white;
+
+  &:hover {
+    background: v.$color-primary-hover;
+  }
+}

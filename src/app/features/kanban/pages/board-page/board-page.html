@@ -10,8 +10,14 @@
     @for (column of boardStore.columns(); track column.id) {
       <article class="board-column">
         <header class="column-header">
-          <h3>{{ column.title }}</h3>
-          <span class="task-count">{{ column.tasks.length }}</span>
+          <div class="column-header-meta">
+            <h3>{{ column.title }}</h3>
+            <span class="task-count">{{ column.tasks.length }}</span>
+          </div>
+
+          <button type="button" class="add-task-button" (click)="openCreateTaskDialog(column.id)">
+            + Task
+          </button>
         </header>
 
         <div class="task-list">
@@ -35,6 +41,14 @@
           }
         </div>
       </article>
+
+      @if (activeCreateTaskColumnId() === column.id) {
+        <app-create-task-dialog
+          [columnId]="column.id"
+          [columnTitle]="column.title"
+          (closed)="closeCreateTaskDialog()"
+        />
+      }
     }
   </div>
 </section>
