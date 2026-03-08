@@ -10,6 +10,10 @@
 }
 
 .board-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+
   h2 {
     margin-bottom: 0.5rem;
   }
@@ -19,18 +23,126 @@
   }
 }
 
-.board-placeholder {
+.board-columns {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  gap: v.$space-5;
+  align-items: start;
 }
 
-.column {
-  min-height: 320px;
+.board-column {
+  display: grid;
+  gap: v.$space-4;
+  min-height: 420px;
   padding: v.$space-4;
-  border-radius: v.$radius-md;
+  border-radius: v.$radius-lg;
   border: 1px solid v.$color-border;
   background: v.$color-surface;
-  font-weight: 600;
   box-shadow: v.$shadow-sm;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-3;
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.task-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: v.$color-surface-alt;
+  border: 1px solid v.$color-border;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.task-list {
+  display: grid;
+  gap: v.$space-4;
+}
+
+.task-card {
+  display: grid;
+  gap: v.$space-3;
+  padding: v.$space-4;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  background: v.$color-surface-alt;
+  box-shadow: v.$shadow-sm;
+
+  h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: v.$color-text;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: v.$color-text-muted;
+  }
+}
+
+.task-card-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.priority {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+}
+
+.priority--low {
+  color: v.$color-success;
+  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.16);
+}
+
+.priority--medium {
+  color: v.$color-warning;
+  background: rgba(217, 119, 6, 0.08);
+  border-color: rgba(217, 119, 6, 0.16);
+}
+
+.priority--high {
+  color: v.$color-danger;
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(220, 38, 38, 0.16);
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: v.$color-text-muted;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.empty-state {
+  padding: v.$space-4;
+  border: 1px dashed v.$color-border;
+  border-radius: v.$radius-md;
+  color: v.$color-text-muted;
+  background: v.$color-surface-alt;
+  text-align: center;
 }

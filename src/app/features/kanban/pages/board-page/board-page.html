@@ -1,12 +1,40 @@
 <section class="board-page">
   <div class="board-header">
-    <h2>Board Overview</h2>
-    <p>Hier bauen wir als Nächstes Columns, Cards und Drag & Drop ein.</p>
+    <div>
+      <h2>Board Overview</h2>
+      <p>{{ boardStore.totalTaskCount() }} Tasks im aktuellen Board.</p>
+    </div>
   </div>
 
-  <div class="board-placeholder">
-    <div class="column">To Do</div>
-    <div class="column">In Progress</div>
-    <div class="column">Done</div>
+  <div class="board-columns">
+    @for (column of boardStore.columns(); track column.id) {
+      <article class="board-column">
+        <header class="column-header">
+          <h3>{{ column.title }}</h3>
+          <span class="task-count">{{ column.tasks.length }}</span>
+        </header>
+
+        <div class="task-list">
+          @for (task of column.tasks; track task.id) {
+            <article class="task-card">
+              <div class="task-card-top">
+                <span class="priority" [class]="'priority priority--' + task.priority">
+                  {{ task.priority }}
+                </span>
+              </div>
+
+              <h4>{{ task.title }}</h4>
+              <p>{{ task.description }}</p>
+
+              <footer class="task-meta">
+                <span>{{ task.assignee }}</span>
+              </footer>
+            </article>
+          } @empty {
+            <div class="empty-state">Noch keine Tasks in dieser Spalte.</div>
+          }
+        </div>
+      </article>
+    }
   </div>
 </section>
