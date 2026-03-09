@@ -26,20 +26,20 @@
 
         <div class="task-list">
           @for (task of column.tasks; track task.id) {
-            <article
-              class="task-card"
-              tabindex="0"
-              role="button"
-              (click)="openEditTaskDialog(task)"
-              (keydown.enter)="openEditTaskDialog(task)"
-              (keydown.space)="openEditTaskDialog(task)"
-            >
+            <article class="task-card">
               <div class="task-card-top">
                 <span class="priority" [class]="'priority priority--' + task.priority">
                   {{ task.priority }}
                 </span>
 
-                <span class="edit-hint">Bearbeiten</span>
+                <button
+                  type="button"
+                  class="edit-task-button"
+                  (click)="openEditTaskDialog(task)"
+                  [attr.aria-label]="'Task ' + task.title + ' bearbeiten'"
+                >
+                  Bearbeiten
+                </button>
               </div>
 
               <h4>{{ task.title }}</h4>
@@ -47,7 +47,6 @@
 
               <footer class="task-meta">
                 <span>{{ task.assignee }}</span>
-                <span class="task-action-hint">Klick oder Enter</span>
               </footer>
             </article>
           } @empty {

@@ -13,6 +13,7 @@
   display: flex;
   align-items: start;
   justify-content: space-between;
+  gap: v.$space-4;
 
   h2 {
     margin-bottom: 0.5rem;
@@ -75,6 +76,17 @@
   }
 }
 
+.add-task-button--global {
+  background: v.$color-primary;
+  color: #fff;
+  border-color: v.$color-primary;
+
+  &:hover {
+    background: v.$color-primary-hover;
+    border-color: v.$color-primary-hover;
+  }
+}
+
 .task-count {
   display: inline-flex;
   align-items: center;
@@ -102,12 +114,6 @@
   border-radius: v.$radius-md;
   background: v.$color-surface-alt;
   box-shadow: v.$shadow-sm;
-  cursor: pointer;
-  transition:
-    transform v.$transition-fast,
-    box-shadow v.$transition-fast,
-    border-color v.$transition-fast,
-    background v.$transition-fast;
 
   h4 {
     margin: 0;
@@ -120,14 +126,6 @@
     font-size: 0.95rem;
     color: v.$color-text-muted;
   }
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: v.$shadow-md;
-    border-color: v.$color-primary;
-    background: v.$color-surface;
-    outline: none;
-  }
 }
 
 .task-card-top {
@@ -137,11 +135,30 @@
   gap: v.$space-3;
 }
 
-.edit-hint {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: v.$color-primary;
-  opacity: 0.85;
+.edit-task-button {
+  border: 1px solid v.$color-border;
+  background: v.$color-surface;
+  color: v.$color-text;
+  padding: 0.4rem 0.75rem;
+  border-radius: v.$radius-sm;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition:
+    background v.$transition-fast,
+    border-color v.$transition-fast,
+    color v.$transition-fast;
+
+  &:hover {
+    background: v.$color-surface-alt;
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: v.$color-primary;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
 }
 
 .priority {
@@ -181,11 +198,6 @@
   color: v.$color-text-muted;
   font-size: 0.875rem;
   font-weight: 600;
-}
-
-.task-action-hint {
-  font-size: 0.75rem;
-  color: v.$color-text-muted;
 }
 
 .empty-state {
