@@ -23,6 +23,21 @@ export class EditTaskDialog {
   readonly task = input.required<Task>();
   readonly closed = output<void>();
 
+  protected readonly showDeleteConfirm = signal(false);
+
+  protected openDeleteConfirm(): void {
+    this.showDeleteConfirm.set(true);
+  }
+
+  protected closeDeleteConfirm(): void {
+    this.showDeleteConfirm.set(false);
+  }
+
+  protected confirmDelete(): void {
+    this.boardStore.deleteTask(this.task().id);
+    this.closed.emit();
+  }
+
   protected readonly formModel = signal<EditTaskFormModel>({
     title: '',
     description: '',

@@ -82,8 +82,28 @@
         </div>
       </div>
 
+      @if (showDeleteConfirm()) {
+        <div class="delete-confirm">
+          <p>
+            Möchtest du den Task <strong>{{ task().title }}</strong> wirklich löschen?
+          </p>
+
+          <div class="delete-confirm-actions">
+            <button type="button" class="secondary-button" (click)="closeDeleteConfirm()">
+              Abbrechen
+            </button>
+
+            <button type="button" class="danger-button" (click)="confirmDelete()">
+              Ja, Task löschen
+            </button>
+          </div>
+        </div>
+      }
+
       <footer class="dialog-actions">
-        <button type="button" class="danger-button" (click)="deleteTask()">Löschen</button>
+        @if (!showDeleteConfirm()) {
+          <button type="button" class="danger-button" (click)="openDeleteConfirm()">Löschen</button>
+        }
 
         <div class="dialog-actions-right">
           <button type="button" class="secondary-button" (click)="close()">Abbrechen</button>
