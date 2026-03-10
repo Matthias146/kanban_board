@@ -179,4 +179,28 @@ export class BoardStore {
       },
     }));
   }
+
+  reorderTasksInColumn(columnId: string, previousIndex: number, currentIndex: number): void {
+    const board = this.boardState();
+    const column = board.columns[columnId];
+
+    if (!column || previousIndex === currentIndex) {
+      return;
+    }
+
+    const updatedTaskIds = [...column.taskIds];
+    const [movedTaskId] = updatedTaskIds.splice(previousIndex, 1);
+    updatedTaskIds.splice(currentIndex, 0, movedTaskId);
+
+    this.boardState.update((currentBoard) => ({
+      ...currentBoard,
+      columns: {
+        ...currentBoard.columns,
+        [columnId]: {
+          ...currentBoard.columns[columnId],
+          taskIds: updatedTaskIds,
+        },
+      },
+    }));
+  }
 }

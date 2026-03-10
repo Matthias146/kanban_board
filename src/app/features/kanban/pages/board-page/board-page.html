@@ -24,9 +24,14 @@
           </div>
         </header>
 
-        <div class="task-list">
+        <div
+          class="task-list"
+          cdkDropList
+          [cdkDropListData]="column.tasks"
+          (cdkDropListDropped)="dropInColumn($event, column.id)"
+        >
           @for (task of column.tasks; track task.id) {
-            <article class="task-card">
+            <article class="task-card" cdkDrag>
               <div class="task-card-top">
                 <span class="priority" [class]="'priority priority--' + task.priority">
                   {{ task.priority }}
