@@ -224,6 +224,11 @@
   opacity: 0.35;
 }
 
+.task-list.cdk-drop-list-receiving {
+  border-radius: v.$radius-md;
+  background: rgba(37, 99, 235, 0.04);
+}
+
 .cdk-drag-animating {
   transition: transform 250ms ease;
 }

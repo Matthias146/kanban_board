@@ -3,11 +3,11 @@ import { CreateTaskDialog } from '../../components/create-task-dialog/create-tas
 import { EditTaskDialog } from '../../components/edit-task-dialog/edit-task-dialog';
 import { BoardStore } from '../../data-access/board.store';
 import { Task } from '../../models/kanban.models';
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-board-page',
-  imports: [CreateTaskDialog, EditTaskDialog, CdkDropList, CdkDrag],
+  imports: [CreateTaskDialog, EditTaskDialog, CdkDropList, CdkDrag, CdkDropListGroup],
   templateUrl: './board-page.html',
   styleUrl: './board-page.scss',
 })
@@ -33,11 +33,20 @@ export class BoardPage {
     this.activeTask.set(null);
   }
 
-  protected dropInColumn(event: CdkDragDrop<Task[]>, columnId: string): void {
-    if (event.previousContainer !== event.container) {
+  protected dropTask(event: CdkDragDrop<Task[]>, columnId: string): void {
+    const previousColumnId = event.previousContainer.id;
+    const currentColumnId = event.container.id;
+
+    if (event.previousContainer === event.container) {
+      this.boardStore.reorderTasksInColumn(columnId, event.previousIndex, event.currentIndex);
       return;
     }
 
-    this.boardStore.reorderTasksInColumn(columnId, event.previousIndex, event.currentIndex);
+    this.boardStore.moveTaskBetweenColumns(
+      previousColumnId,
+      currentColumnId,
+      event.previousIndex,
+      event.currentIndex,
+    );
   }
 }

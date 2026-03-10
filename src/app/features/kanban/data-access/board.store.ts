@@ -203,4 +203,49 @@ export class BoardStore {
       },
     }));
   }
+
+  moveTaskBetweenColumns(
+    previousColumnId: string,
+    currentColumnId: string,
+    previousIndex: number,
+    currentIndex: number,
+  ): void {
+    if (previousColumnId === currentColumnId) {
+      return;
+    }
+
+    const board = this.boardState();
+    const previousColumn = board.columns[previousColumnId];
+    const currentColumn = board.columns[currentColumnId];
+
+    if (!previousColumn || !currentColumn) {
+      return;
+    }
+
+    const previousTaskIds = [...previousColumn.taskIds];
+    const currentTaskIds = [...currentColumn.taskIds];
+
+    const [movedTaskId] = previousTaskIds.splice(previousIndex, 1);
+
+    if (!movedTaskId) {
+      return;
+    }
+
+    currentTaskIds.splice(currentIndex, 0, movedTaskId);
+
+    this.boardState.update((currentBoard) => ({
+      ...currentBoard,
+      columns: {
+        ...currentBoard.columns,
+        [previousColumnId]: {
+          ...currentBoard.columns[previousColumnId],
+          taskIds: previousTaskIds,
+        },
+        [currentColumnId]: {
+          ...currentBoard.columns[currentColumnId],
+          taskIds: currentTaskIds,
+        },
+      },
+    }));
+  }
 }
