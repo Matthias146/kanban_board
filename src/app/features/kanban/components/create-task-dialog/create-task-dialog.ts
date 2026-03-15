@@ -1,14 +1,7 @@
 import { Component, computed, inject, output, signal } from '@angular/core';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
 import { BoardStore } from '../../data-access/board.store';
-import { TaskPriority } from '../../models/kanban.models';
-
-interface CreateTaskFormModel {
-  title: string;
-  description: string;
-  priority: TaskPriority;
-  assignee: string;
-}
+import { CreateTaskFormModel } from '../../models/kanban.models';
 
 @Component({
   selector: 'app-create-task-dialog',

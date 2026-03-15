@@ -1,15 +1,7 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { BoardStore } from '../../data-access/board.store';
-import { Task } from '../../models/kanban.models';
+import { EditTaskFormModel, Task } from '../../models/kanban.models';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
-import { TaskPriority } from '../../models/kanban.models';
-
-interface EditTaskFormModel {
-  title: string;
-  description: string;
-  priority: TaskPriority;
-  assignee: string;
-}
 
 @Component({
   selector: 'app-edit-task-dialog',

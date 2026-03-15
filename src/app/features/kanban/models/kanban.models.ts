@@ -27,3 +27,17 @@ export interface Board {
 export interface ColumnViewModel extends Column {
   tasks: Task[];
 }
+
+export interface CreateTaskFormModel {
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  assignee: string;
+}
+
+export interface EditTaskFormModel {
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  assignee: string;
+}
