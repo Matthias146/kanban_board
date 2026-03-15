@@ -1,30 +1,9 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 import { createInitialBoard } from './board.seed';
 import { loadBoard, saveBoard } from './board.storage';
-import { Board, Column, ColumnViewModel, Task, TaskPriority } from '../models/kanban.models';
-
-function nowIso(): string {
-  return new Date().toISOString();
-}
-
-function createTask(
-  title: string,
-  description: string,
-  priority: TaskPriority,
-  assignee: string,
-): Task {
-  const timestamp = nowIso();
-
-  return {
-    id: crypto.randomUUID(),
-    title,
-    description,
-    priority,
-    assignee,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  };
-}
+import { Board, Column, ColumnViewModel, Task } from '../models/kanban.models';
+import { createTask } from '../utils/task.factory';
+import { nowIso } from '../utils/date.utils';
 
 @Injectable({
   providedIn: 'root',
