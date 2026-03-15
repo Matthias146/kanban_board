@@ -25,11 +25,6 @@ export class EditTaskDialog {
     this.showDeleteConfirm.set(false);
   }
 
-  protected confirmDelete(): void {
-    this.boardStore.deleteTask(this.task().id);
-    this.closed.emit();
-  }
-
   protected readonly formModel = signal<EditTaskFormModel>({
     title: '',
     description: '',

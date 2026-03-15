@@ -1,7 +1,7 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 import { createInitialBoard } from './board.seed';
 import { loadBoard, saveBoard } from './board.storage';
-import { Board, Column, ColumnViewModel, Task } from '../models/kanban.models';
+import { Board, ColumnViewModel, Task } from '../models/kanban.models';
 import { createTask } from '../utils/task.factory';
 import { nowIso } from '../utils/date.utils';
 
@@ -10,8 +10,6 @@ import { nowIso } from '../utils/date.utils';
 })
 export class BoardStore {
   private readonly boardState = signal<Board>(loadBoard() ?? createInitialBoard());
-
-  readonly board = computed(() => this.boardState());
 
   readonly columns = computed<ColumnViewModel[]>(() => {
     const board = this.boardState();
@@ -34,29 +32,6 @@ export class BoardStore {
     effect(() => {
       saveBoard(this.boardState());
     });
-  }
-
-  addColumn(title: string): void {
-    const trimmedTitle = title.trim();
-
-    if (!trimmedTitle) {
-      return;
-    }
-
-    const newColumn: Column = {
-      id: crypto.randomUUID(),
-      title: trimmedTitle,
-      taskIds: [],
-    };
-
-    this.boardState.update((board) => ({
-      ...board,
-      columnOrder: [...board.columnOrder, newColumn.id],
-      columns: {
-        ...board.columns,
-        [newColumn.id]: newColumn,
-      },
-    }));
   }
 
   addTaskToDefaultColumn(taskInput: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): void {
@@ -120,10 +95,6 @@ export class BoardStore {
       tasks: updatedTasks,
       columns: updatedColumns,
     });
-  }
-
-  resetBoard(): void {
-    this.boardState.set(createInitialBoard());
   }
 
   private addTaskToColumn(
