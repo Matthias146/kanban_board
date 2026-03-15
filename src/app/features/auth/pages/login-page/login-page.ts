@@ -2,11 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { form, FormField, required, email } from '@angular/forms/signals';
-
-interface LoginFormModel {
-  email: string;
-  password: string;
-}
+import { LoginFormModel } from './login.model';
 
 @Component({
   selector: 'app-login-page',
