@@ -1,16 +1,17 @@
-import { Injectable, computed, effect, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { createInitialBoard } from './board.seed';
 import { loadBoard, saveBoard } from './board.storage';
 import { Board, ColumnViewModel, Task } from '../models/kanban.models';
 import { createTask } from '../utils/task.factory';
 import { nowIso } from '../utils/date.utils';
+import { BoardApiService } from './board-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardStore {
   private readonly boardState = signal<Board>(loadBoard() ?? createInitialBoard());
-
+  private readonly boardApiService = inject(BoardApiService);
   readonly columns = computed<ColumnViewModel[]>(() => {
     const board = this.boardState();
 
@@ -29,6 +30,7 @@ export class BoardStore {
   readonly totalTaskCount = computed(() => Object.keys(this.boardState().tasks).length);
 
   constructor() {
+    this.boardApiService.testConnection();
     effect(() => {
       saveBoard(this.boardState());
     });
