@@ -30,7 +30,7 @@ export class BoardStore {
   readonly totalTaskCount = computed(() => Object.keys(this.boardState().tasks).length);
 
   constructor() {
-    this.boardApiService.testConnection();
+    void this.boardApiService.getBoards();
     effect(() => {
       saveBoard(this.boardState());
     });
