@@ -1,41 +1,90 @@
 import { Injectable } from '@angular/core';
-import { collection, getDocs, limit, query } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase.client';
-import { FirestoreBoard } from '../models/firestore-board.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardApiService {
-  async getBoards(): Promise<FirestoreBoard[]> {
-    const querySnapshot = await getDocs(collection(db, 'boards'));
+  async seedKanbanData(): Promise<void> {
+    const boardRef = await addDoc(collection(db, 'boards'), {
+      title: 'Kanban Board',
+      createdAt: new Date().toISOString(),
+    });
 
-    return querySnapshot.docs.map((doc) => {
-      const data = doc.data();
+    const todoColumnRef = await addDoc(collection(db, 'columns'), {
+      boardId: boardRef.id,
+      title: 'To Do',
+      kind: 'todo',
+      position: 0,
+    });
 
-      return {
-        id: doc.id,
-        title: data['title'] as string,
-        createdAt: data['createdAt'] as string,
-      };
+    const inProgressColumnRef = await addDoc(collection(db, 'columns'), {
+      boardId: boardRef.id,
+      title: 'In Progress',
+      kind: 'in_progress',
+      position: 1,
+    });
+
+    const doneColumnRef = await addDoc(collection(db, 'columns'), {
+      boardId: boardRef.id,
+      title: 'Done',
+      kind: 'done',
+      position: 2,
+    });
+
+    await addDoc(collection(db, 'tasks'), {
+      boardId: boardRef.id,
+      columnId: todoColumnRef.id,
+      title: 'Login UI umsetzen',
+      description: 'Login-Seite mit Angular Signal Forms bauen.',
+      priority: 'medium',
+      assignee: 'Matthias',
+      position: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    await addDoc(collection(db, 'tasks'), {
+      boardId: boardRef.id,
+      columnId: todoColumnRef.id,
+      title: 'Board Layout vorbereiten',
+      description: 'Spaltenstruktur und Task-Karten vorbereiten.',
+      priority: 'high',
+      assignee: 'Matthias',
+      position: 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    await addDoc(collection(db, 'tasks'), {
+      boardId: boardRef.id,
+      columnId: inProgressColumnRef.id,
+      title: 'Drag and Drop integrieren',
+      description: 'Tasks innerhalb und zwischen Spalten verschiebbar machen.',
+      priority: 'medium',
+      assignee: 'Matthias',
+      position: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    console.log('Kanban Seed erfolgreich angelegt.', {
+      boardId: boardRef.id,
+      todoColumnId: todoColumnRef.id,
+      inProgressColumnId: inProgressColumnRef.id,
+      doneColumnId: doneColumnRef.id,
     });
   }
 
-  async getFirstBoard(): Promise<FirestoreBoard | null> {
-    const boardsQuery = query(collection(db, 'boards'), limit(1));
-    const querySnapshot = await getDocs(boardsQuery);
+  async getBoards(): Promise<void> {
+    const querySnapshot = await getDocs(collection(db, 'boards'));
 
-    if (querySnapshot.empty) {
-      return null;
-    }
+    const boards = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-    const firstDoc = querySnapshot.docs[0];
-    const data = firstDoc.data();
-
-    return {
-      id: firstDoc.id,
-      title: data['title'] as string,
-      createdAt: data['createdAt'] as string,
-    };
+    console.log('Boards aus Firestore:', boards);
   }
 }

@@ -18,10 +18,6 @@ export class BoardPage {
   protected readonly isCreateTaskDialogOpen = signal(false);
   protected readonly activeTask = signal<Task | null>(null);
 
-  constructor() {
-    void this.loadBoardFromFirestore();
-  }
-
   protected openCreateTaskDialog(): void {
     this.isCreateTaskDialogOpen.set(true);
   }
@@ -53,14 +49,5 @@ export class BoardPage {
       event.previousIndex,
       event.currentIndex,
     );
-  }
-
-  private async loadBoardFromFirestore(): Promise<void> {
-    try {
-      const board = await this.boardApiService.getFirstBoard();
-      console.log('Erstes Board aus Firestore:', board);
-    } catch (error) {
-      console.error('Fehler beim Laden des Boards aus Firestore:', error);
-    }
   }
 }
