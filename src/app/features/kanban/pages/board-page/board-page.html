@@ -29,7 +29,7 @@
           cdkDropList
           [id]="column.id"
           [cdkDropListData]="column.tasks"
-          (cdkDropListDropped)="dropTask($event, column.id)"
+          (cdkDropListDropped)="dropTask($event)"
         >
           @for (task of column.tasks; track task.id) {
             <article class="task-card" cdkDrag>

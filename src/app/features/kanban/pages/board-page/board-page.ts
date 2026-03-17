@@ -38,21 +38,34 @@ export class BoardPage {
     this.activeTask.set(null);
   }
 
-  protected dropTask(event: CdkDragDrop<Task[]>, columnId: string): void {
-    const previousColumnId = event.previousContainer.id;
-    const currentColumnId = event.container.id;
+  protected async dropTask(event: CdkDragDrop<Task[]>): Promise<void> {
+    const boardId = this.boardStore.boardId();
 
-    if (event.previousContainer === event.container) {
-      this.boardStore.reorderTasksInColumn(columnId, event.previousIndex, event.currentIndex);
+    if (!boardId) {
+      console.error('Kein Board im Store vorhanden.');
       return;
     }
 
-    this.boardStore.moveTaskBetweenColumns(
-      previousColumnId,
-      currentColumnId,
-      event.previousIndex,
-      event.currentIndex,
-    );
+    const previousColumnId = event.previousContainer.id;
+    const currentColumnId = event.container.id;
+
+    try {
+      await this.boardApiService.moveTask(
+        boardId,
+        previousColumnId,
+        currentColumnId,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+      const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+
+      if (refreshedBoard) {
+        this.boardStore.setBoard(refreshedBoard);
+      }
+    } catch (error) {
+      console.error('Fehler beim Verschieben des Tasks in Firestore:', error);
+    }
   }
 
   private async loadKanbanBoardFromFirestore(): Promise<void> {
