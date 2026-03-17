@@ -30,10 +30,13 @@ export class BoardStore {
   readonly totalTaskCount = computed(() => Object.keys(this.boardState().tasks).length);
 
   constructor() {
-    void this.boardApiService.getBoards();
     effect(() => {
       saveBoard(this.boardState());
     });
+  }
+
+  setBoard(board: Board): void {
+    this.boardState.set(board);
   }
 
   addTaskToDefaultColumn(taskInput: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): void {
@@ -199,5 +202,21 @@ export class BoardStore {
         },
       },
     }));
+  }
+
+  private async loadKanbanBoardFromFirestore(): Promise<void> {
+    try {
+      const boardId = await this.boardApiService.getFirstBoardId();
+
+      if (!boardId) {
+        console.log('Kein Board in Firestore gefunden.');
+        return;
+      }
+
+      const board = await this.boardApiService.getKanbanBoard(boardId);
+      console.log('Kanban Board aus Firestore:', board);
+    } catch (error) {
+      console.error('Fehler beim Laden des Kanban Boards aus Firestore:', error);
+    }
   }
 }

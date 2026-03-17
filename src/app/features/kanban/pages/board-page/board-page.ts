@@ -18,6 +18,10 @@ export class BoardPage {
   protected readonly isCreateTaskDialogOpen = signal(false);
   protected readonly activeTask = signal<Task | null>(null);
 
+  constructor() {
+    void this.loadKanbanBoardFromFirestore();
+  }
+
   protected openCreateTaskDialog(): void {
     this.isCreateTaskDialogOpen.set(true);
   }
@@ -49,5 +53,28 @@ export class BoardPage {
       event.previousIndex,
       event.currentIndex,
     );
+  }
+
+  private async loadKanbanBoardFromFirestore(): Promise<void> {
+    try {
+      const boardId = await this.boardApiService.getFirstBoardId();
+
+      if (!boardId) {
+        console.log('Kein Board in Firestore gefunden.');
+        return;
+      }
+
+      const board = await this.boardApiService.getKanbanBoard(boardId);
+
+      if (!board) {
+        console.log('Kein Kanban Board aus Firestore geladen.');
+        return;
+      }
+
+      this.boardStore.setBoard(board);
+      console.log('Kanban Board in BoardStore hydratisiert:', board);
+    } catch (error) {
+      console.error('Fehler beim Laden des Kanban Boards aus Firestore:', error);
+    }
   }
 }
