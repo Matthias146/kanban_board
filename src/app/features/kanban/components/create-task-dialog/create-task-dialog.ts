@@ -2,6 +2,7 @@ import { Component, computed, inject, output, signal } from '@angular/core';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
 import { BoardStore } from '../../data-access/board.store';
 import { CreateTaskFormModel } from '../../models/kanban.models';
+import { BoardApiService } from '../../data-access/board-api.service';
 
 @Component({
   selector: 'app-create-task-dialog',
@@ -11,6 +12,7 @@ import { CreateTaskFormModel } from '../../models/kanban.models';
 })
 export class CreateTaskDialog {
   private readonly boardStore = inject(BoardStore);
+  private readonly boardApiService = inject(BoardApiService);
 
   readonly closed = output<void>();
 
@@ -49,7 +51,7 @@ export class CreateTaskDialog {
     this.closed.emit();
   }
 
-  protected submit(event: Event): void {
+  protected async submit(event: Event): Promise<void> {
     event.preventDefault();
 
     if (!this.taskForm().valid()) {
@@ -57,14 +59,27 @@ export class CreateTaskDialog {
       return;
     }
 
+    const boardId = this.boardStore.boardId();
+
+    if (!boardId) {
+      console.error('Kein Board im Store vorhanden.');
+      return;
+    }
+
     const value = this.formModel();
 
-    this.boardStore.addTaskToDefaultColumn({
+    await this.boardApiService.createTaskInDefaultColumn(boardId, {
       title: value.title,
       description: value.description,
       priority: value.priority,
       assignee: value.assignee,
     });
+
+    const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+
+    if (refreshedBoard) {
+      this.boardStore.setBoard(refreshedBoard);
+    }
 
     this.closed.emit();
   }

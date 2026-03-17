@@ -177,4 +177,54 @@ export class BoardApiService {
       tasks,
     };
   }
+
+  async createTaskInDefaultColumn(
+    boardId: string,
+    taskInput: {
+      title: string;
+      description: string;
+      priority: 'low' | 'medium' | 'high';
+      assignee: string;
+    },
+  ): Promise<void> {
+    const columnsQuery = query(
+      collection(db, 'columns'),
+      where('boardId', '==', boardId),
+      where('kind', '==', 'todo'),
+      limit(1),
+    );
+
+    const todoColumnSnapshot = await getDocs(columnsQuery);
+
+    if (todoColumnSnapshot.empty) {
+      throw new Error('Keine To-Do-Spalte für dieses Board gefunden.');
+    }
+
+    const todoColumnDoc = todoColumnSnapshot.docs[0];
+    const todoColumnId = todoColumnDoc.id;
+
+    const tasksQuery = query(
+      collection(db, 'tasks'),
+      where('boardId', '==', boardId),
+      where('columnId', '==', todoColumnId),
+      orderBy('position'),
+    );
+
+    const tasksSnapshot = await getDocs(tasksQuery);
+    const nextPosition = tasksSnapshot.docs.length;
+
+    const timestamp = new Date().toISOString();
+
+    await addDoc(collection(db, 'tasks'), {
+      boardId,
+      columnId: todoColumnId,
+      title: taskInput.title.trim(),
+      description: taskInput.description.trim(),
+      priority: taskInput.priority,
+      assignee: taskInput.assignee.trim(),
+      position: nextPosition,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+  }
 }

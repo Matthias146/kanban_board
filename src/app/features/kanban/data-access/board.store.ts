@@ -12,6 +12,7 @@ import { BoardApiService } from './board-api.service';
 export class BoardStore {
   private readonly boardState = signal<Board>(loadBoard() ?? createInitialBoard());
   private readonly boardApiService = inject(BoardApiService);
+  readonly boardId = computed(() => this.boardState().id);
   readonly columns = computed<ColumnViewModel[]>(() => {
     const board = this.boardState();
 
