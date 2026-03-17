@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import { BoardStore } from '../../data-access/board.store';
 import { EditTaskFormModel, Task } from '../../models/kanban.models';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
+import { BoardApiService } from '../../data-access/board-api.service';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -11,7 +12,7 @@ import { form, FormField, minLength, required } from '@angular/forms/signals';
 })
 export class EditTaskDialog {
   private readonly boardStore = inject(BoardStore);
-
+  private readonly boardApiService = inject(BoardApiService);
   readonly task = input.required<Task>();
   readonly closed = output<void>();
 
@@ -23,11 +24,6 @@ export class EditTaskDialog {
 
   protected closeDeleteConfirm(): void {
     this.showDeleteConfirm.set(false);
-  }
-
-  protected confirmDelete(): void {
-    this.boardStore.deleteTask(this.task().id);
-    this.closed.emit();
   }
 
   protected readonly formModel = signal<EditTaskFormModel>({
@@ -78,7 +74,7 @@ export class EditTaskDialog {
     this.closed.emit();
   }
 
-  protected submit(event: Event): void {
+  protected async submit(event: Event): Promise<void> {
     event.preventDefault();
 
     if (!this.taskForm().valid()) {
@@ -86,14 +82,46 @@ export class EditTaskDialog {
       return;
     }
 
+    const boardId = this.boardStore.boardId();
+
+    if (!boardId) {
+      console.error('Kein Board im Store vorhanden.');
+      return;
+    }
+
     const value = this.formModel();
 
-    this.boardStore.updateTask(this.task().id, {
+    await this.boardApiService.updateTask(this.task().id, {
       title: value.title,
       description: value.description,
       priority: value.priority,
       assignee: value.assignee,
     });
+
+    const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+
+    if (refreshedBoard) {
+      this.boardStore.setBoard(refreshedBoard);
+    }
+
+    this.closed.emit();
+  }
+
+  protected async confirmDelete(): Promise<void> {
+    const boardId = this.boardStore.boardId();
+
+    if (!boardId) {
+      console.error('Kein Board im Store vorhanden.');
+      return;
+    }
+
+    await this.boardApiService.deleteTask(this.task().id);
+
+    const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+
+    if (refreshedBoard) {
+      this.boardStore.setBoard(refreshedBoard);
+    }
 
     this.closed.emit();
   }

@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   limit,
   orderBy,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase.client';
@@ -226,5 +228,30 @@ export class BoardApiService {
       createdAt: timestamp,
       updatedAt: timestamp,
     });
+  }
+
+  async updateTask(
+    taskId: string,
+    changes: {
+      title: string;
+      description: string;
+      priority: 'low' | 'medium' | 'high';
+      assignee: string;
+    },
+  ): Promise<void> {
+    const taskRef = doc(db, 'tasks', taskId);
+
+    await updateDoc(taskRef, {
+      title: changes.title.trim(),
+      description: changes.description.trim(),
+      priority: changes.priority,
+      assignee: changes.assignee.trim(),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  async deleteTask(taskId: string): Promise<void> {
+    const taskRef = doc(db, 'tasks', taskId);
+    await deleteDoc(taskRef);
   }
 }
