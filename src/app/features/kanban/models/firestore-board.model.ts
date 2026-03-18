@@ -4,6 +4,7 @@ export type TaskPriority = 'low' | 'medium' | 'high';
 export interface FirestoreBoard {
   id: string;
   title: string;
+  ownerId: string;
   createdAt: string;
 }
 

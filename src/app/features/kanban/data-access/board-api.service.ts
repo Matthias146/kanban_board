@@ -21,9 +21,10 @@ import { FirestoreColumn, FirestoreTask } from '../models/firestore-board.model'
   providedIn: 'root',
 })
 export class BoardApiService {
-  async seedKanbanData(): Promise<void> {
+  async seedKanbanData(ownerId: string): Promise<void> {
     const boardRef = await addDoc(collection(db, 'boards'), {
       title: 'Kanban Board',
+      ownerId,
       createdAt: new Date().toISOString(),
     });
 
@@ -41,7 +42,7 @@ export class BoardApiService {
       position: 1,
     });
 
-    const doneColumnRef = await addDoc(collection(db, 'columns'), {
+    await addDoc(collection(db, 'columns'), {
       boardId: boardRef.id,
       title: 'Done',
       kind: 'done',
@@ -82,13 +83,6 @@ export class BoardApiService {
       position: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    });
-
-    console.log('Kanban Seed erfolgreich angelegt.', {
-      boardId: boardRef.id,
-      todoColumnId: todoColumnRef.id,
-      inProgressColumnId: inProgressColumnRef.id,
-      doneColumnId: doneColumnRef.id,
     });
   }
 

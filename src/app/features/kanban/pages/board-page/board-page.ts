@@ -5,6 +5,7 @@ import { BoardStore } from '../../data-access/board.store';
 import { Task } from '../../models/kanban.models';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BoardApiService } from '../../data-access/board-api.service';
+import { AuthService } from '../../../auth/data-access/auth.service';
 
 @Component({
   selector: 'app-board-page',
@@ -15,7 +16,7 @@ import { BoardApiService } from '../../data-access/board-api.service';
 export class BoardPage {
   protected readonly boardStore = inject(BoardStore);
   private readonly boardApiService = inject(BoardApiService);
-
+  private readonly authService = inject(AuthService);
   protected readonly isCreateTaskDialogOpen = signal(false);
   protected readonly activeTask = signal<Task | null>(null);
   protected readonly isLoading = signal(true);
@@ -76,7 +77,14 @@ export class BoardPage {
     this.loadError.set(null);
 
     try {
-      const boardId = await this.boardApiService.getFirstBoardId();
+      const user = this.authService.user();
+
+      if (!user) {
+        this.boardStore.clearBoard();
+        return;
+      }
+
+      const boardId = await this.boardApiService.getBoardIdForUser(user.uid);
 
       if (!boardId) {
         this.boardStore.clearBoard();
