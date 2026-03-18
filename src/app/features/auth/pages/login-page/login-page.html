@@ -1,9 +1,11 @@
-<section class="login-page">
-  <div class="login-card">
-    <h2>Login</h2>
-    <p>Demo-Login für das Portfolio-Projekt.</p>
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="auth-head">
+      <h2>Login</h2>
+      <p>Melde dich an oder teste die App direkt als Gast.</p>
+    </div>
 
-    <form class="login-form" (submit)="login($event)">
+    <form class="auth-form" (submit)="submit($event)">
       <div class="form-field">
         <label class="form-label" for="email">E-Mail</label>
         <input
@@ -11,15 +13,11 @@
           class="form-control"
           type="email"
           [formField]="loginForm.email"
-          placeholder="demo@company.com"
+          placeholder="deine@email.de"
         />
 
         @if (loginForm.email().touched() && !loginForm.email().valid()) {
-          <span class="form-error">
-            {{ loginForm.email().errors()[0]?.message }}
-          </span>
-        } @else {
-          <span class="form-hint">Nutze den vorbereiteten Demo-Login.</span>
+          <span class="form-error">{{ emailErrors()[0]?.message }}</span>
         }
       </div>
 
@@ -34,13 +32,35 @@
         />
 
         @if (loginForm.password().touched() && !loginForm.password().valid()) {
-          <span class="form-error">
-            {{ loginForm.password().errors()[0]?.message }}
-          </span>
+          <span class="form-error">{{ passwordErrors()[0]?.message }}</span>
         }
       </div>
 
-      <button type="submit">Demo Login</button>
+      @if (authError()) {
+        <div class="auth-error">
+          {{ authError() }}
+        </div>
+      }
+
+      <button type="submit" class="primary-button" [disabled]="isSubmitting()">Einloggen</button>
     </form>
+
+    <div class="auth-divider">
+      <span>oder</span>
+    </div>
+
+    <button
+      type="button"
+      class="secondary-button secondary-button--full"
+      (click)="loginAsGuest()"
+      [disabled]="isSubmitting()"
+    >
+      Als Gast testen
+    </button>
+
+    <p class="auth-footer">
+      Noch kein Konto?
+      <a routerLink="/register">Jetzt registrieren</a>
+    </p>
   </div>
 </section>

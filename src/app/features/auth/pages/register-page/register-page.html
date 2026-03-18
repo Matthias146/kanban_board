@@ -1,0 +1,70 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="auth-head">
+      <h2>Registrieren</h2>
+      <p>Erstelle ein Konto, um dein eigenes Kanban Board zu nutzen.</p>
+    </div>
+
+    <form class="auth-form" (submit)="submit($event)">
+      <div class="form-field">
+        <label class="form-label" for="register-email">E-Mail</label>
+        <input
+          id="register-email"
+          class="form-control"
+          type="email"
+          [formField]="registerForm.email"
+          placeholder="deine@email.de"
+        />
+
+        @if (registerForm.email().touched() && !registerForm.email().valid()) {
+          <span class="form-error">{{ emailErrors()[0]?.message }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="register-password">Passwort</label>
+        <input
+          id="register-password"
+          class="form-control"
+          type="password"
+          [formField]="registerForm.password"
+          placeholder="••••••••"
+        />
+
+        @if (registerForm.password().touched() && !registerForm.password().valid()) {
+          <span class="form-error">{{ passwordErrors()[0]?.message }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="register-confirm-password">Passwort bestätigen</label>
+        <input
+          id="register-confirm-password"
+          class="form-control"
+          type="password"
+          [formField]="registerForm.confirmPassword"
+          placeholder="••••••••"
+        />
+
+        @if (registerForm.confirmPassword().touched() && !registerForm.confirmPassword().valid()) {
+          <span class="form-error">{{ confirmPasswordErrors()[0]?.message }}</span>
+        } @else if (passwordsDoNotMatch()) {
+          <span class="form-error">Die Passwörter stimmen nicht überein.</span>
+        }
+      </div>
+
+      @if (authError()) {
+        <div class="auth-error">
+          {{ authError() }}
+        </div>
+      }
+
+      <button type="submit" class="primary-button" [disabled]="isSubmitting()">Registrieren</button>
+    </form>
+
+    <p class="auth-footer">
+      Bereits ein Konto?
+      <a routerLink="/login">Zum Login</a>
+    </p>
+  </div>
+</section>

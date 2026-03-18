@@ -54,27 +54,6 @@
   font-weight: 500;
 }
 
-.auth-divider {
-  position: relative;
-  text-align: center;
-
-  span {
-    position: relative;
-    z-index: 1;
-    padding: 0 0.75rem;
-    background: v.$color-surface;
-    color: v.$color-text-muted;
-    font-size: 0.875rem;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 50% 0 auto;
-    border-top: 1px solid v.$color-border;
-  }
-}
-
 .auth-footer {
   margin: 0;
   text-align: center;
@@ -86,43 +65,23 @@
   }
 }
 
-.primary-button,
-.secondary-button {
+.primary-button {
   border: 1px solid transparent;
   border-radius: v.$radius-sm;
   padding: 0.875rem 1rem;
   font-weight: 600;
+  background: v.$color-primary;
+  color: #fff;
   transition:
     background v.$transition-fast,
-    border-color v.$transition-fast,
-    color v.$transition-fast,
     opacity v.$transition-fast;
+
+  &:hover:not(:disabled) {
+    background: v.$color-primary-hover;
+  }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-}
-
-.primary-button {
-  background: v.$color-primary;
-  color: #fff;
-
-  &:hover:not(:disabled) {
-    background: v.$color-primary-hover;
-  }
-}
-
-.secondary-button {
-  background: v.$color-surface-alt;
-  color: v.$color-text;
-  border-color: v.$color-border;
-
-  &:hover:not(:disabled) {
-    background: v.$color-surface;
-  }
-}
-
-.secondary-button--full {
-  width: 100%;
 }

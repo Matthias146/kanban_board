@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../../features/auth/data-access/auth.service';
 
 @Component({
   selector: 'app-shell',
