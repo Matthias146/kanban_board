@@ -11,22 +11,22 @@
 
 .board-header {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: space-between;
   gap: v.$space-4;
+}
 
-  h2 {
-    margin-bottom: 0.5rem;
-  }
+.board-header h2 {
+  margin-bottom: 0.5rem;
+}
 
-  p {
-    color: v.$color-text-muted;
-  }
+.board-header p {
+  color: v.$color-text-muted;
 }
 
 .board-columns {
   display: grid;
-  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: v.$space-5;
   align-items: start;
 }
@@ -53,11 +53,11 @@
   display: flex;
   align-items: center;
   gap: v.$space-3;
+}
 
-  h3 {
-    margin: 0;
-    font-size: 1rem;
-  }
+.column-header-meta h3 {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .add-task-button {
@@ -70,21 +70,21 @@
   transition:
     background v.$transition-fast,
     border-color v.$transition-fast;
+}
 
-  &:hover {
-    background: v.$color-surface;
-  }
+.add-task-button:hover {
+  background: v.$color-surface;
 }
 
 .add-task-button--global {
   background: v.$color-primary;
   color: #fff;
   border-color: v.$color-primary;
+}
 
-  &:hover {
-    background: v.$color-primary-hover;
-    border-color: v.$color-primary-hover;
-  }
+.add-task-button--global:hover {
+  background: v.$color-primary-hover;
+  border-color: v.$color-primary-hover;
 }
 
 .task-count {
@@ -116,21 +116,22 @@
   background: v.$color-surface-alt;
   box-shadow: v.$shadow-sm;
   cursor: grab;
+}
 
-  h4 {
-    margin: 0;
-    font-size: 1rem;
-    color: v.$color-text;
-  }
+.task-card h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: v.$color-text;
+}
 
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: v.$color-text-muted;
-  }
-  &:active {
-    cursor: grabbing;
-  }
+.task-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: v.$color-text-muted;
+}
+
+.task-card:active {
+  cursor: grabbing;
 }
 
 .task-card-top {
@@ -152,18 +153,18 @@
     background v.$transition-fast,
     border-color v.$transition-fast,
     color v.$transition-fast;
+}
 
-  &:hover {
-    background: v.$color-surface-alt;
-    border-color: v.$color-primary;
-    color: v.$color-primary;
-  }
+.edit-task-button:hover {
+  background: v.$color-surface-alt;
+  border-color: v.$color-primary;
+  color: v.$color-primary;
+}
 
-  &:focus-visible {
-    outline: none;
-    border-color: v.$color-primary;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  }
+.edit-task-button:focus-visible {
+  outline: none;
+  border-color: v.$color-primary;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .priority {
@@ -235,4 +236,34 @@
 
 .task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
   transition: transform 250ms ease;
+}
+
+.board-state-card {
+  display: grid;
+  gap: v.$space-3;
+  padding: v.$space-6;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  background: v.$color-surface;
+  box-shadow: v.$shadow-sm;
+  text-align: center;
+}
+
+.board-state-card h3 {
+  margin: 0;
+  color: v.$color-text;
+}
+
+.board-state-card p {
+  margin: 0;
+  color: v.$color-text-muted;
+}
+
+.board-state-card--error {
+  border-color: rgba(220, 38, 38, 0.2);
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.board-state-card--error h3 {
+  color: v.$color-danger;
 }

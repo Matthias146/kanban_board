@@ -1,67 +1,84 @@
 <section class="board-page">
-  <div class="board-header">
-    <div>
-      <h2>Board Overview</h2>
-      <p>{{ boardStore.totalTaskCount() }} Tasks im aktuellen Board.</p>
+  @if (isLoading()) {
+    <div class="board-state-card">
+      <h3>Board wird geladen ...</h3>
+      <p>Bitte warte einen kurzen Moment.</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="board-state-card board-state-card--error">
+      <h3>Fehler beim Laden</h3>
+      <p>{{ loadError() }}</p>
+    </div>
+  } @else if (!boardStore.hasBoard()) {
+    <div class="board-state-card">
+      <h3>Noch kein Board vorhanden</h3>
+      <p>Lege zuerst ein Board in Firestore an oder seed die Daten manuell.</p>
+    </div>
+  } @else {
+    <div class="board-header">
+      <div>
+        <h2>Board Overview</h2>
+        <p>{{ boardStore.totalTaskCount() }} Tasks im aktuellen Board.</p>
+      </div>
+
+      <button
+        type="button"
+        class="add-task-button add-task-button--global"
+        (click)="openCreateTaskDialog()"
+      >
+        + Task erstellen
+      </button>
     </div>
 
-    <button
-      type="button"
-      class="add-task-button add-task-button--global"
-      (click)="openCreateTaskDialog()"
-    >
-      + Task erstellen
-    </button>
-  </div>
+    <div class="board-columns">
+      @for (column of boardStore.columns(); track column.id) {
+        <article class="board-column">
+          <header class="column-header">
+            <div class="column-header-meta">
+              <h3>{{ column.title }}</h3>
+              <span class="task-count">{{ column.tasks.length }}</span>
+            </div>
+          </header>
 
-  <div class="board-columns" cdkDropListGroup>
-    @for (column of boardStore.columns(); track column.id) {
-      <article class="board-column">
-        <header class="column-header">
-          <div class="column-header-meta">
-            <h3>{{ column.title }}</h3>
-            <span class="task-count">{{ column.tasks.length }}</span>
+          <div
+            class="task-list"
+            cdkDropList
+            [id]="column.id"
+            [cdkDropListData]="column.tasks"
+            (cdkDropListDropped)="dropTask($event)"
+          >
+            @for (task of column.tasks; track task.id) {
+              <article class="task-card" cdkDrag>
+                <div class="task-card-top">
+                  <span class="priority" [class]="'priority priority--' + task.priority">
+                    {{ task.priority }}
+                  </span>
+
+                  <button
+                    type="button"
+                    class="edit-task-button"
+                    (click)="openEditTaskDialog(task)"
+                    [attr.aria-label]="'Task ' + task.title + ' bearbeiten'"
+                  >
+                    Bearbeiten
+                  </button>
+                </div>
+
+                <h4>{{ task.title }}</h4>
+                <p>{{ task.description }}</p>
+
+                <footer class="task-meta">
+                  <span>{{ task.assignee }}</span>
+                </footer>
+              </article>
+            } @empty {
+              <div class="empty-state">Noch keine Tasks in dieser Spalte.</div>
+            }
           </div>
-        </header>
-
-        <div
-          class="task-list"
-          cdkDropList
-          [id]="column.id"
-          [cdkDropListData]="column.tasks"
-          (cdkDropListDropped)="dropTask($event)"
-        >
-          @for (task of column.tasks; track task.id) {
-            <article class="task-card" cdkDrag>
-              <div class="task-card-top">
-                <span class="priority" [class]="'priority priority--' + task.priority">
-                  {{ task.priority }}
-                </span>
-
-                <button
-                  type="button"
-                  class="edit-task-button"
-                  (click)="openEditTaskDialog(task)"
-                  [attr.aria-label]="'Task ' + task.title + ' bearbeiten'"
-                >
-                  Bearbeiten
-                </button>
-              </div>
-
-              <h4>{{ task.title }}</h4>
-              <p>{{ task.description }}</p>
-
-              <footer class="task-meta">
-                <span>{{ task.assignee }}</span>
-              </footer>
-            </article>
-          } @empty {
-            <div class="empty-state">Noch keine Tasks in dieser Spalte.</div>
-          }
-        </div>
-      </article>
-    }
-  </div>
+        </article>
+      }
+    </div>
+  }
 
   @if (isCreateTaskDialogOpen()) {
     <app-create-task-dialog (closed)="closeCreateTaskDialog()" />

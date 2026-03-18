@@ -3,20 +3,23 @@ import { CreateTaskDialog } from '../../components/create-task-dialog/create-tas
 import { EditTaskDialog } from '../../components/edit-task-dialog/edit-task-dialog';
 import { BoardStore } from '../../data-access/board.store';
 import { Task } from '../../models/kanban.models';
-import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BoardApiService } from '../../data-access/board-api.service';
 
 @Component({
   selector: 'app-board-page',
-  imports: [CreateTaskDialog, EditTaskDialog, CdkDropList, CdkDrag, CdkDropListGroup],
+  imports: [CreateTaskDialog, EditTaskDialog, CdkDropList, CdkDrag],
   templateUrl: './board-page.html',
   styleUrl: './board-page.scss',
 })
 export class BoardPage {
   protected readonly boardStore = inject(BoardStore);
   private readonly boardApiService = inject(BoardApiService);
+
   protected readonly isCreateTaskDialogOpen = signal(false);
   protected readonly activeTask = signal<Task | null>(null);
+  protected readonly isLoading = signal(true);
+  protected readonly loadError = signal<string | null>(null);
 
   constructor() {
     void this.loadKanbanBoardFromFirestore();
@@ -69,25 +72,31 @@ export class BoardPage {
   }
 
   private async loadKanbanBoardFromFirestore(): Promise<void> {
+    this.isLoading.set(true);
+    this.loadError.set(null);
+
     try {
       const boardId = await this.boardApiService.getFirstBoardId();
 
       if (!boardId) {
-        console.log('Kein Board in Firestore gefunden.');
+        this.boardStore.clearBoard();
         return;
       }
 
       const board = await this.boardApiService.getKanbanBoard(boardId);
 
       if (!board) {
-        console.log('Kein Kanban Board aus Firestore geladen.');
+        this.boardStore.clearBoard();
         return;
       }
 
       this.boardStore.setBoard(board);
-      console.log('Kanban Board in BoardStore hydratisiert:', board);
     } catch (error) {
       console.error('Fehler beim Laden des Kanban Boards aus Firestore:', error);
+      this.loadError.set('Das Board konnte nicht geladen werden.');
+      this.boardStore.clearBoard();
+    } finally {
+      this.isLoading.set(false);
     }
   }
 }
