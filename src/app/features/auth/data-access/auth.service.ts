@@ -21,6 +21,7 @@ export class AuthService {
 
   readonly user = computed(() => this.currentUserSignal());
   readonly isLoading = computed(() => this.isLoadingSignal());
+  readonly isReady = computed(() => !this.isLoadingSignal());
   readonly isAuthenticated = computed(() => this.currentUserSignal() !== null);
   readonly isGuest = computed(() => this.currentUserSignal()?.isAnonymous ?? false);
 
