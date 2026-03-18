@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase.client';
 import { Board, Column, Task } from '../models/kanban.models';
-import { FirestoreColumn, FirestoreTask } from '../models/firestore-board.model';
+import { FirestoreBoard, FirestoreColumn, FirestoreTask } from '../models/firestore-board.model';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +83,33 @@ export class BoardApiService {
       position: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+    });
+  }
+
+  async getBoardIdForUser(ownerId: string): Promise<string | null> {
+    const boardsQuery = query(collection(db, 'boards'), where('ownerId', '==', ownerId), limit(1));
+
+    const snapshot = await getDocs(boardsQuery);
+
+    if (snapshot.empty) {
+      return null;
+    }
+
+    return snapshot.docs[0].id;
+  }
+
+  async getBoards(): Promise<FirestoreBoard[]> {
+    const querySnapshot = await getDocs(collection(db, 'boards'));
+
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+
+      return {
+        id: doc.id,
+        title: data['title'] as string,
+        ownerId: data['ownerId'] as string,
+        createdAt: data['createdAt'] as string,
+      };
     });
   }
 
