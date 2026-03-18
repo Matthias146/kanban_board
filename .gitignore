@@ -43,3 +43,7 @@ __screenshots__/
 Thumbs.db
 src/environments/environment.ts
 src/environments/environment.prod.ts
+src/app/**/*.css
+src/app/**/*.css.map
+src/styles.css
+src/styles.css.map
