@@ -84,11 +84,10 @@ export class BoardPage {
         return;
       }
 
-      const boardId = await this.boardApiService.getBoardIdForUser(user.uid);
+      let boardId = await this.boardApiService.getBoardIdForUser(user.uid);
 
       if (!boardId) {
-        this.boardStore.clearBoard();
-        return;
+        boardId = await this.boardApiService.createInitialBoardForUser(user.uid);
       }
 
       const board = await this.boardApiService.getKanbanBoard(boardId);
