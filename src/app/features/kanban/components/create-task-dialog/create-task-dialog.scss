@@ -1,94 +1,252 @@
 @use "../../../../../styles/abstracts/variables" as v;
 
 :host {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
+  display: block;
 }
 
 .dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   display: grid;
   place-items: center;
-  min-height: 100dvh;
-  padding: v.$space-6;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(4px);
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(5, 10, 22, 0.72), rgba(5, 10, 22, 0.86));
+  backdrop-filter: blur(10px);
 }
 
 .dialog-card {
-  width: min(100%, 640px);
-  background: v.$color-surface;
-  border: 1px solid v.$color-border;
-  border-radius: v.$radius-xl;
-  box-shadow: v.$shadow-lg;
-  padding: v.$space-6;
+  width: min(100%, 680px);
   display: grid;
-  gap: v.$space-6;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(186, 195, 255, 0.1);
+  background: linear-gradient(180deg, rgba(19, 27, 46, 0.98), rgba(12, 18, 34, 0.98));
+  box-shadow:
+    0 30px 60px -30px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  color: #dae2fd;
 }
 
 .dialog-header {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: v.$space-4;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(186, 195, 255, 0.08);
 
   h3 {
-    margin: 0 0 0.375rem;
-    font-size: 1.25rem;
+    margin: 0 0 0.35rem;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #eef3ff;
   }
 
   p {
     margin: 0;
-    color: v.$color-text-muted;
+    color: #8f9bbd;
+    font-size: 0.92rem;
+    line-height: 1.5;
   }
 }
 
 .icon-button {
-  min-width: 40px;
-  min-height: 40px;
-  border: 1px solid v.$color-border;
-  background: v.$color-surface;
-  color: v.$color-text;
-  border-radius: 999px;
-  font-size: 1rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(186, 195, 255, 0.12);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: #c8d2f6;
+  transition:
+    background v.$transition-fast,
+    border-color v.$transition-fast,
+    color v.$transition-fast,
+    transform v.$transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(186, 195, 255, 0.18);
+    color: #eef3ff;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: rgba(97, 139, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
+  }
 }
 
 .dialog-form {
   display: grid;
-  gap: v.$space-5;
+  gap: 1rem;
+}
+
+.form-field {
+  display: grid;
+  gap: 0.45rem;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: v.$space-4;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.form-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7f8cb3;
+}
+
+.form-control {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(186, 195, 255, 0.12);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: #eef3ff;
+  transition:
+    border-color v.$transition-fast,
+    background v.$transition-fast,
+    box-shadow v.$transition-fast;
+
+  &::placeholder {
+    color: #6f7ca0;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.055);
+    border-color: rgba(186, 195, 255, 0.18);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(97, 139, 255, 0.55);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
+  }
+}
+
+textarea.form-control {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+select.form-control {
+  appearance: none;
+}
+
+.form-error {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #ff9cad;
 }
 
 .dialog-actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
-  gap: v.$space-3;
+  gap: 0.85rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(186, 195, 255, 0.08);
 }
 
+.primary-button,
 .secondary-button,
+.danger-button {
+  border: 1px solid transparent;
+  border-radius: 0.9rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition:
+    background v.$transition-fast,
+    border-color v.$transition-fast,
+    color v.$transition-fast,
+    transform v.$transition-fast,
+    opacity v.$transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
 .primary-button {
-  border: 0;
-  padding: 0.75rem 1rem;
-  border-radius: v.$radius-sm;
-  font-weight: 600;
+  background: linear-gradient(180deg, #3e76fe, #2d68f0);
+  color: #fff;
+  border-color: rgba(97, 139, 255, 0.45);
+
+  &:hover {
+    background: linear-gradient(180deg, #4a7fff, #376ff3);
+  }
 }
 
 .secondary-button {
-  background: v.$color-surface-alt;
-  color: v.$color-text;
-  border: 1px solid v.$color-border;
-}
-
-.primary-button {
-  background: v.$color-primary;
-  color: white;
+  background: rgba(255, 255, 255, 0.045);
+  color: #d7def8;
+  border-color: rgba(186, 195, 255, 0.12);
 
   &:hover {
-    background: v.$color-primary-hover;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(186, 195, 255, 0.18);
+  }
+}
+
+.danger-button {
+  background: rgba(248, 113, 133, 0.12);
+  color: #ff9cad;
+  border-color: rgba(248, 113, 133, 0.18);
+
+  &:hover {
+    background: rgba(248, 113, 133, 0.18);
+    border-color: rgba(248, 113, 133, 0.3);
+  }
+}
+
+@media (max-width: 640px) {
+  .dialog-backdrop {
+    padding: 1rem;
+  }
+
+  .dialog-card {
+    width: 100%;
+    padding: 1.1rem;
+    border-radius: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .danger-button {
+    width: 100%;
   }
 }

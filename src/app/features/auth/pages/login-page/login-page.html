@@ -1,66 +1,98 @@
 <section class="auth-page">
-  <div class="auth-card">
-    <div class="auth-head">
-      <h2>Login</h2>
-      <p>Melde dich an oder teste die App direkt als Gast.</p>
+  <div class="auth-shell">
+    <div class="auth-panel auth-panel--brand">
+      <div class="auth-brand">
+        <span class="auth-brand__eyebrow">Project Space</span>
+        <h1>Nocturnal Kanban</h1>
+        <p>
+          Strukturiere Aufgaben, priorisiere Arbeit und verfolge deinen Fortschritt in einer klaren,
+          modernen Sprint-Oberfläche.
+        </p>
+      </div>
+
+      <div class="auth-highlights">
+        <article class="auth-highlight-card">
+          <span class="auth-highlight-card__label">Focus</span>
+          <strong>Signal-first workflow</strong>
+          <p>Angular 21, Signal Forms, Firestore und Drag & Drop in einer App.</p>
+        </article>
+
+        <article class="auth-highlight-card">
+          <span class="auth-highlight-card__label">Use Case</span>
+          <strong>B2B inspired Kanban</strong>
+          <p>Ein Produkt-UI mit klarer Hierarchie, echten Zuständen und User-Flows.</p>
+        </article>
+      </div>
     </div>
 
-    <form class="auth-form" (submit)="submit($event)">
-      <div class="form-field">
-        <label class="form-label" for="email">E-Mail</label>
-        <input
-          id="email"
-          class="form-control"
-          type="email"
-          [formField]="loginForm.email"
-          placeholder="deine@email.de"
-        />
-
-        @if (loginForm.email().touched() && !loginForm.email().valid()) {
-          <span class="form-error">{{ emailErrors()[0]?.message }}</span>
-        }
-      </div>
-
-      <div class="form-field">
-        <label class="form-label" for="password">Passwort</label>
-        <input
-          id="password"
-          class="form-control"
-          type="password"
-          [formField]="loginForm.password"
-          placeholder="••••••••"
-        />
-
-        @if (loginForm.password().touched() && !loginForm.password().valid()) {
-          <span class="form-error">{{ passwordErrors()[0]?.message }}</span>
-        }
-      </div>
-
-      @if (authError()) {
-        <div class="auth-error">
-          {{ authError() }}
+    <div class="auth-panel auth-panel--form">
+      <div class="auth-card">
+        <div class="auth-head">
+          <span class="auth-head__eyebrow">Welcome back</span>
+          <h2>Login</h2>
+          <p>Melde dich an oder teste die App direkt als Gast.</p>
         </div>
-      }
 
-      <button type="submit" class="primary-button" [disabled]="isSubmitting()">Einloggen</button>
-    </form>
+        <form class="auth-form" (submit)="submit($event)">
+          <div class="form-field">
+            <label class="form-label" for="email">E-Mail</label>
+            <input
+              id="email"
+              class="form-control"
+              type="email"
+              [formField]="loginForm.email"
+              placeholder="deine@email.de"
+            />
 
-    <div class="auth-divider">
-      <span>oder</span>
+            @if (loginForm.email().touched() && !loginForm.email().valid()) {
+              <span class="form-error">{{ emailErrors()[0]?.message }}</span>
+            }
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="password">Passwort</label>
+            <input
+              id="password"
+              class="form-control"
+              type="password"
+              [formField]="loginForm.password"
+              placeholder="••••••••"
+            />
+
+            @if (loginForm.password().touched() && !loginForm.password().valid()) {
+              <span class="form-error">{{ passwordErrors()[0]?.message }}</span>
+            }
+          </div>
+
+          @if (authError()) {
+            <div class="auth-error">
+              {{ authError() }}
+            </div>
+          }
+
+          <button type="submit" class="primary-button" [disabled]="isSubmitting()">
+            Einloggen
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <span>oder</span>
+        </div>
+
+        <button
+          type="button"
+          class="secondary-button secondary-button--full"
+          (click)="loginAsGuest()"
+          [disabled]="isSubmitting()"
+        >
+          Als Gast testen
+        </button>
+
+        <p class="auth-footer">
+          Noch kein Konto?
+          <a routerLink="/register">Jetzt registrieren</a>
+        </p>
+      </div>
     </div>
-
-    <button
-      type="button"
-      class="secondary-button secondary-button--full"
-      (click)="loginAsGuest()"
-      [disabled]="isSubmitting()"
-    >
-      Als Gast testen
-    </button>
-
-    <p class="auth-footer">
-      Noch kein Konto?
-      <a routerLink="/register">Jetzt registrieren</a>
-    </p>
   </div>
 </section>
