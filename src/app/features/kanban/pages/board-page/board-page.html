@@ -15,29 +15,57 @@
       <p>Lege zuerst ein Board in Firestore an oder seed die Daten manuell.</p>
     </div>
   } @else {
-    <div class="board-header">
-      <div>
-        <h2>Board Overview</h2>
-        <p>{{ boardStore.totalTaskCount() }} Tasks im aktuellen Board.</p>
+    <header class="board-hero">
+      <div class="board-hero__content">
+        <div class="board-hero__eyebrow">
+          <span class="board-hero__eyebrow-label">Project Space</span>
+          <span class="board-hero__eyebrow-separator">/</span>
+          <span class="board-hero__eyebrow-value">Matthias / Kanban Board</span>
+        </div>
+
+        <h2 class="board-hero__title">Active Sprint Board</h2>
+        <p class="board-hero__subtitle">
+          Verwalte Aufgaben, Prioritäten und Fortschritt in deinem aktuellen Sprint.
+        </p>
       </div>
 
-      <button
-        type="button"
-        class="add-task-button add-task-button--global"
-        (click)="openCreateTaskDialog()"
-      >
-        + Task erstellen
-      </button>
-    </div>
+      <div class="board-hero__actions">
+        <div class="board-hero__stats">
+          <div class="board-stat">
+            <span class="board-stat__label">Tasks</span>
+            <span class="board-stat__value">{{ boardStore.totalTaskCount() }}</span>
+          </div>
 
-    <div class="board-columns">
+          <div class="board-stat">
+            <span class="board-stat__label">Columns</span>
+            <span class="board-stat__value">{{ boardStore.columns().length }}</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="add-task-button add-task-button--global"
+          (click)="openCreateTaskDialog()"
+        >
+          + Task erstellen
+        </button>
+      </div>
+    </header>
+
+    <div class="board-columns" cdkDropListGroup>
       @for (column of boardStore.columns(); track column.id) {
-        <article class="board-column">
+        <article class="board-column" [class]="getColumnClass(column.title)">
           <header class="column-header">
             <div class="column-header-meta">
-              <h3>{{ column.title }}</h3>
-              <span class="task-count">{{ column.tasks.length }}</span>
+              <span class="column-status-dot"></span>
+
+              <div class="column-header-copy">
+                <h3>{{ column.title }}</h3>
+                <p>{{ column.tasks.length }} Aufgaben</p>
+              </div>
             </div>
+
+            <span class="task-count">{{ column.tasks.length }}</span>
           </header>
 
           <div
@@ -64,11 +92,20 @@
                   </button>
                 </div>
 
-                <h4>{{ task.title }}</h4>
-                <p>{{ task.description }}</p>
+                <div class="task-card-body">
+                  <h4>{{ task.title }}</h4>
+                  <p>{{ task.description }}</p>
+                </div>
 
                 <footer class="task-meta">
-                  <span>{{ task.assignee }}</span>
+                  <div class="task-assignee">
+                    <span class="task-assignee__avatar">
+                      {{ task.assignee.charAt(0).toUpperCase() }}
+                    </span>
+                    <span class="task-assignee__name">{{ task.assignee }}</span>
+                  </div>
+
+                  <span class="task-meta__label">Task</span>
                 </footer>
               </article>
             } @empty {

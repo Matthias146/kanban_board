@@ -2,7 +2,8 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import { BoardStore } from '../../data-access/board.store';
 import { EditTaskFormModel, Task } from '../../models/kanban.models';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
-import { BoardApiService } from '../../data-access/board-api.service';
+import { BoardCommandService } from '../../data-access/board-command.service';
+import { BoardQueryService } from '../../data-access/board-query.service';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -12,7 +13,8 @@ import { BoardApiService } from '../../data-access/board-api.service';
 })
 export class EditTaskDialog {
   private readonly boardStore = inject(BoardStore);
-  private readonly boardApiService = inject(BoardApiService);
+  private readonly boardCommandService = inject(BoardCommandService);
+  private readonly boardQueryService = inject(BoardQueryService);
   readonly task = input.required<Task>();
   readonly closed = output<void>();
 
@@ -91,14 +93,14 @@ export class EditTaskDialog {
 
     const value = this.formModel();
 
-    await this.boardApiService.updateTask(this.task().id, {
+    await this.boardCommandService.updateTask(this.task().id, {
       title: value.title,
       description: value.description,
       priority: value.priority,
       assignee: value.assignee,
     });
 
-    const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+    const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
 
     if (refreshedBoard) {
       this.boardStore.setBoard(refreshedBoard);
@@ -115,9 +117,9 @@ export class EditTaskDialog {
       return;
     }
 
-    await this.boardApiService.deleteTask(this.task().id);
+    await this.boardCommandService.deleteTask(this.task().id);
 
-    const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+    const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
 
     if (refreshedBoard) {
       this.boardStore.setBoard(refreshedBoard);

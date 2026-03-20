@@ -3,19 +3,23 @@ import { CreateTaskDialog } from '../../components/create-task-dialog/create-tas
 import { EditTaskDialog } from '../../components/edit-task-dialog/edit-task-dialog';
 import { BoardStore } from '../../data-access/board.store';
 import { Task } from '../../models/kanban.models';
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { BoardApiService } from '../../data-access/board-api.service';
+import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { AuthService } from '../../../auth/data-access/auth.service';
+import { BoardQueryService } from '../../data-access/board-query.service';
+import { BoardSeedService } from '../../data-access/board-seed.service';
+import { BoardCommandService } from '../../data-access/board-command.service';
 
 @Component({
   selector: 'app-board-page',
-  imports: [CreateTaskDialog, EditTaskDialog, CdkDropList, CdkDrag],
+  imports: [CreateTaskDialog, EditTaskDialog, CdkDropList, CdkDrag, CdkDropListGroup],
   templateUrl: './board-page.html',
   styleUrl: './board-page.scss',
 })
 export class BoardPage {
   protected readonly boardStore = inject(BoardStore);
-  private readonly boardApiService = inject(BoardApiService);
+  private readonly boardQueryService = inject(BoardQueryService);
+  private readonly boardSeedService = inject(BoardSeedService);
+  private readonly boardCommandService = inject(BoardCommandService);
   private readonly authService = inject(AuthService);
   protected readonly isCreateTaskDialogOpen = signal(false);
   protected readonly activeTask = signal<Task | null>(null);
@@ -54,7 +58,7 @@ export class BoardPage {
     const currentColumnId = event.container.id;
 
     try {
-      await this.boardApiService.moveTask(
+      await this.boardCommandService.moveTask(
         boardId,
         previousColumnId,
         currentColumnId,
@@ -62,7 +66,7 @@ export class BoardPage {
         event.currentIndex,
       );
 
-      const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+      const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
 
       if (refreshedBoard) {
         this.boardStore.setBoard(refreshedBoard);
@@ -70,6 +74,24 @@ export class BoardPage {
     } catch (error) {
       console.error('Fehler beim Verschieben des Tasks in Firestore:', error);
     }
+  }
+
+  protected getColumnClass(title: string): string {
+    const normalizedTitle = title.trim().toLowerCase();
+
+    if (normalizedTitle.includes('to do') || normalizedTitle.includes('backlog')) {
+      return 'board-column board-column--todo';
+    }
+
+    if (normalizedTitle.includes('progress')) {
+      return 'board-column board-column--progress';
+    }
+
+    if (normalizedTitle.includes('done')) {
+      return 'board-column board-column--done';
+    }
+
+    return 'board-column';
   }
 
   private async loadKanbanBoardFromFirestore(): Promise<void> {
@@ -84,13 +106,13 @@ export class BoardPage {
         return;
       }
 
-      let boardId = await this.boardApiService.getBoardIdForUser(user.uid);
+      let boardId = await this.boardQueryService.getBoardIdForUser(user.uid);
 
       if (!boardId) {
-        boardId = await this.boardApiService.createInitialBoardForUser(user.uid);
+        boardId = await this.boardSeedService.createInitialBoardForUser(user.uid);
       }
 
-      const board = await this.boardApiService.getKanbanBoard(boardId);
+      const board = await this.boardQueryService.getKanbanBoard(boardId);
 
       if (!board) {
         this.boardStore.clearBoard();

@@ -2,7 +2,8 @@ import { Component, computed, inject, output, signal } from '@angular/core';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
 import { BoardStore } from '../../data-access/board.store';
 import { CreateTaskFormModel } from '../../models/kanban.models';
-import { BoardApiService } from '../../data-access/board-api.service';
+import { BoardCommandService } from '../../data-access/board-command.service';
+import { BoardQueryService } from '../../data-access/board-query.service';
 
 @Component({
   selector: 'app-create-task-dialog',
@@ -12,7 +13,8 @@ import { BoardApiService } from '../../data-access/board-api.service';
 })
 export class CreateTaskDialog {
   private readonly boardStore = inject(BoardStore);
-  private readonly boardApiService = inject(BoardApiService);
+  private readonly boardCommandService = inject(BoardCommandService);
+  private readonly boardQueryService = inject(BoardQueryService);
 
   readonly closed = output<void>();
 
@@ -68,14 +70,14 @@ export class CreateTaskDialog {
 
     const value = this.formModel();
 
-    await this.boardApiService.createTaskInDefaultColumn(boardId, {
+    await this.boardCommandService.createTaskInDefaultColumn(boardId, {
       title: value.title,
       description: value.description,
       priority: value.priority,
       assignee: value.assignee,
     });
 
-    const refreshedBoard = await this.boardApiService.getKanbanBoard(boardId);
+    const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
 
     if (refreshedBoard) {
       this.boardStore.setBoard(refreshedBoard);
