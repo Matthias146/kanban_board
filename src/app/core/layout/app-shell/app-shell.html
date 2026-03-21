@@ -1,26 +1,39 @@
-<div class="shell">
-  <aside class="sidebar">
-    <div class="logo">Kanban B2B</div>
+<div class="app-shell">
+  <header class="app-shell__header">
+    <div class="app-shell__brand">
+      <div class="app-shell__brand-badge">K</div>
 
-    <nav class="nav">
-      <a routerLink="/board" routerLinkActive="active">Board</a>
-    </nav>
-  </aside>
-
-  <div class="content">
-    <header class="topbar">
-      <h1>Kanban Board</h1>
-
-      <div class="topbar-actions">
-        <span class="user-name">
-          {{ authService.isGuest() ? 'Gast' : authService.user()?.email }}
-        </span>
-        <button type="button" class="logout-button" (click)="logout()">Logout</button>
+      <div class="app-shell__brand-copy">
+        <span class="app-shell__brand-eyebrow">Project Space</span>
+        <h1>Nocturnal Kanban</h1>
       </div>
-    </header>
+    </div>
 
-    <main class="main-content">
-      <router-outlet />
-    </main>
-  </div>
+    <div class="app-shell__actions">
+      <div class="app-shell__user-card">
+        <div class="app-shell__user-avatar">
+          {{
+            authService.isGuest()
+              ? 'G'
+              : (authService.user()?.email?.charAt(0)?.toUpperCase() ?? 'U')
+          }}
+        </div>
+
+        <div class="app-shell__user-copy">
+          <span class="app-shell__user-role">
+            {{ authService.isGuest() ? 'Gastzugang' : 'Registrierter User' }}
+          </span>
+          <strong class="app-shell__user-name">
+            {{ authService.isGuest() ? 'Gast' : authService.user()?.email }}
+          </strong>
+        </div>
+      </div>
+
+      <button type="button" class="logout-button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="app-shell__content">
+    <router-outlet />
+  </main>
 </div>

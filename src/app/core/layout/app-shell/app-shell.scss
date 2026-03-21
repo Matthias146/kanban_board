@@ -1,101 +1,193 @@
-@use "../../../../styles/abstracts/variables" as v;
+@use "../../../../../styles/abstracts/variables" as v;
 
 :host {
   display: block;
   min-height: 100dvh;
+  background:
+    radial-gradient(circle at top left, rgba(62, 118, 254, 0.08), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(52, 181, 250, 0.06), transparent 24%),
+    linear-gradient(180deg, #0b1326 0%, #0e162b 100%);
+  color: #dae2fd;
 }
 
-.shell {
-  display: grid;
-  grid-template-columns: 260px 1fr;
+.app-shell {
   min-height: 100dvh;
-  background: v.$color-bg;
-  color: v.$color-text;
-}
-
-.sidebar {
-  background: v.$color-sidebar;
-  color: v.$color-sidebar-text;
-  padding: v.$space-6 v.$space-5;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-
-  .logo {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: v.$space-8;
-  }
-
-  .nav {
-    display: flex;
-    flex-direction: column;
-    gap: v.$space-2;
-
-    a {
-      color: v.$color-sidebar-muted;
-      text-decoration: none;
-      padding: 10px 12px;
-      border-radius: v.$radius-sm;
-      transition:
-        background v.$transition-fast,
-        color v.$transition-fast;
-
-      &:hover,
-      &.active {
-        background: rgba(255, 255, 255, 0.08);
-        color: v.$color-sidebar-text;
-      }
-    }
-  }
-}
-
-.content {
   display: grid;
-  grid-template-rows: 72px 1fr;
-  min-width: 0;
+  grid-template-rows: auto 1fr;
 }
 
-.topbar {
+.app-shell__header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 v.$space-6;
-  background: v.$color-surface;
-  border-bottom: 1px solid v.$color-border;
-
-  h1 {
-    font-size: 1.25rem;
-    margin: 0;
-  }
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(186, 195, 255, 0.08);
+  background: rgba(11, 19, 38, 0.82);
+  backdrop-filter: blur(14px);
 }
 
-.topbar-actions {
+.app-shell__brand {
   display: flex;
   align-items: center;
-  gap: v.$space-4;
+  gap: 0.9rem;
+  min-width: 0;
 }
 
-.user-name {
-  color: v.$color-text-muted;
+.app-shell__brand-badge {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, #3e76fe, #2d68f0);
+  color: #fff;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 14px 28px -18px rgba(62, 118, 254, 0.75);
+  flex-shrink: 0;
+}
+
+.app-shell__brand-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.app-shell__brand-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7f8cb3;
+}
+
+.app-shell__brand-copy h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #eef3ff;
+  white-space: nowrap;
+}
+
+.app-shell__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.app-shell__user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(186, 195, 255, 0.08);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.app-shell__user-avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(97, 139, 255, 0.12);
+  border: 1px solid rgba(97, 139, 255, 0.18);
+  color: #bac3ff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.app-shell__user-copy {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.app-shell__user-role {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7f8cb3;
+}
+
+.app-shell__user-name {
+  min-width: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #eef3ff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .logout-button {
-  border: 1px solid v.$color-border;
-  background: v.$color-surface;
-  color: v.$color-text;
-  padding: 0.625rem 1rem;
-  border-radius: v.$radius-sm;
-  font-weight: 600;
+  border: 1px solid rgba(186, 195, 255, 0.12);
+  border-radius: 0.95rem;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.045);
+  color: #d7def8;
+  font-size: 0.88rem;
+  font-weight: 700;
   transition:
     background v.$transition-fast,
-    border-color v.$transition-fast;
+    border-color v.$transition-fast,
+    color v.$transition-fast,
+    transform v.$transition-fast;
 
   &:hover {
-    background: v.$color-surface-alt;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(186, 195, 255, 0.18);
+    color: #eef3ff;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: rgba(97, 139, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
   }
 }
 
-.main-content {
-  padding: v.$space-6;
+.app-shell__content {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+@media (max-width: 780px) {
+  .app-shell__header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .app-shell__actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-shell__user-card {
+    width: 100%;
+  }
+
+  .logout-button {
+    width: 100%;
+  }
+
+  .app-shell__content {
+    padding: 1rem;
+  }
 }
