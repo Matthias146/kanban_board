@@ -211,22 +211,12 @@
   }
 
   .auth-panel--brand {
-    border-right: none;
-    border-bottom: 1px solid rgba(186, 195, 255, 0.08);
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
   .auth-page {
     padding: 1rem;
-  }
-
-  .auth-panel--brand,
-  .auth-panel--form {
-    padding: 1.25rem;
-  }
-
-  .auth-brand h1 {
-    font-size: 2rem;
   }
 }
