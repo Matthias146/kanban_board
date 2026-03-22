@@ -88,70 +88,6 @@
   gap: 1rem;
 }
 
-.form-field {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.form-label {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #7f8cb3;
-}
-
-.form-control {
-  width: 100%;
-  min-height: 3rem;
-  padding: 0.85rem 0.95rem;
-  border: 1px solid rgba(186, 195, 255, 0.12);
-  border-radius: 0.95rem;
-  background: rgba(255, 255, 255, 0.04);
-  color: #eef3ff;
-  transition:
-    border-color v.$transition-fast,
-    background v.$transition-fast,
-    box-shadow v.$transition-fast;
-
-  &::placeholder {
-    color: #6f7ca0;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.055);
-    border-color: rgba(186, 195, 255, 0.18);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: rgba(97, 139, 255, 0.55);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
-  }
-}
-
-textarea.form-control {
-  min-height: 8rem;
-  resize: vertical;
-}
-
-select.form-control {
-  appearance: none;
-}
-
-.form-error {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: #ff9cad;
-}
-
 .dialog-actions {
   display: flex;
   align-items: center;
@@ -159,69 +95,6 @@ select.form-control {
   gap: 0.85rem;
   padding-top: 0.5rem;
   border-top: 1px solid rgba(186, 195, 255, 0.08);
-}
-
-.primary-button,
-.secondary-button,
-.danger-button {
-  border: 1px solid transparent;
-  border-radius: 0.9rem;
-  padding: 0.8rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  transition:
-    background v.$transition-fast,
-    border-color v.$transition-fast,
-    color v.$transition-fast,
-    transform v.$transition-fast,
-    opacity v.$transition-fast;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-}
-
-.primary-button {
-  background: linear-gradient(180deg, #3e76fe, #2d68f0);
-  color: #fff;
-  border-color: rgba(97, 139, 255, 0.45);
-
-  &:hover {
-    background: linear-gradient(180deg, #4a7fff, #376ff3);
-  }
-}
-
-.secondary-button {
-  background: rgba(255, 255, 255, 0.045);
-  color: #d7def8;
-  border-color: rgba(186, 195, 255, 0.12);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(186, 195, 255, 0.18);
-  }
-}
-
-.danger-button {
-  background: rgba(248, 113, 133, 0.12);
-  color: #ff9cad;
-  border-color: rgba(248, 113, 133, 0.18);
-
-  &:hover {
-    background: rgba(248, 113, 133, 0.18);
-    border-color: rgba(248, 113, 133, 0.3);
-  }
 }
 
 @media (max-width: 640px) {
@@ -233,10 +106,6 @@ select.form-control {
     width: 100%;
     padding: 1.1rem;
     border-radius: 1rem;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
   }
 
   .dialog-actions {
