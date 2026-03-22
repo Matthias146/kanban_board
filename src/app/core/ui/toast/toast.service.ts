@@ -37,7 +37,7 @@ export class ToastService {
       },
     ]);
 
-    window.setTimeout(() => {
+    setTimeout(() => {
       this.remove(id);
     }, 3000);
   }
