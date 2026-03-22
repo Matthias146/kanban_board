@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import { EditTaskFormModel, Task } from '../../models/kanban.models';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
 import { BoardCommandService } from '../../data-access/board-command.service';
+import { ToastService } from '../../../../core/ui/toast/toast.service';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -16,6 +17,7 @@ export class EditTaskDialog {
   protected readonly isSubmitting = signal(false);
   protected readonly isDeleting = signal(false);
   protected readonly showDeleteConfirm = signal(false);
+  private readonly toastService = inject(ToastService);
 
   protected openDeleteConfirm(): void {
     this.showDeleteConfirm.set(true);
@@ -91,10 +93,11 @@ export class EditTaskDialog {
         priority: value.priority,
         assignee: value.assignee,
       });
-
+      this.toastService.success('Task wurde erfolgreich gespeichert.');
       this.closed.emit();
     } catch (error) {
       console.error('Fehler beim Aktualisieren des Tasks:', error);
+      this.toastService.error('Task konnte nicht gespeichert werden.');
     } finally {
       this.isSubmitting.set(false);
     }
@@ -105,9 +108,11 @@ export class EditTaskDialog {
 
     try {
       await this.boardCommandService.deleteTask(this.task().id);
+      this.toastService.success('Task wurde gelöscht.');
       this.closed.emit();
     } catch (error) {
       console.error('Fehler beim Löschen des Tasks:', error);
+      this.toastService.error('Task konnte nicht gelöscht werden.');
     } finally {
       this.isDeleting.set(false);
     }

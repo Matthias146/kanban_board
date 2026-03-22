@@ -9,6 +9,7 @@ import { BoardQueryService } from '../../data-access/board-query.service';
 import { BoardSeedService } from '../../data-access/board-seed.service';
 import { BoardCommandService } from '../../data-access/board-command.service';
 import { Unsubscribe } from 'firebase/firestore';
+import { ToastService } from '../../../../core/ui/toast/toast.service';
 
 @Component({
   selector: 'app-board-page',
@@ -29,6 +30,7 @@ export class BoardPage {
   private readonly destroyRef = inject(DestroyRef);
   private boardRealtimeUnsubscribe: Unsubscribe | null = null;
   protected readonly isMovingTask = signal(false);
+  private readonly toastService = inject(ToastService);
 
   constructor() {
     void this.loadKanbanBoardFromFirestore();
@@ -77,6 +79,7 @@ export class BoardPage {
       );
     } catch (error) {
       console.error('Fehler beim Verschieben des Tasks in Firestore:', error);
+      this.toastService.error('Task konnte nicht verschoben werden.');
     } finally {
       this.isMovingTask.set(false);
     }

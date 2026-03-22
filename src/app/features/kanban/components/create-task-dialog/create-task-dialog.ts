@@ -3,7 +3,7 @@ import { form, FormField, minLength, required } from '@angular/forms/signals';
 import { BoardStore } from '../../data-access/board.store';
 import { CreateTaskFormModel } from '../../models/kanban.models';
 import { BoardCommandService } from '../../data-access/board-command.service';
-import { BoardQueryService } from '../../data-access/board-query.service';
+import { ToastService } from '../../../../core/ui/toast/toast.service';
 
 @Component({
   selector: 'app-create-task-dialog',
@@ -14,8 +14,8 @@ import { BoardQueryService } from '../../data-access/board-query.service';
 export class CreateTaskDialog {
   private readonly boardStore = inject(BoardStore);
   private readonly boardCommandService = inject(BoardCommandService);
-  private readonly boardQueryService = inject(BoardQueryService);
   protected readonly isSubmitting = signal(false);
+  private readonly toastService = inject(ToastService);
 
   readonly closed = output<void>();
 
@@ -79,10 +79,11 @@ export class CreateTaskDialog {
         priority: value.priority,
         assignee: value.assignee,
       });
-
+      this.toastService.success('Task wurde erfolgreich erstellt.');
       this.closed.emit();
     } catch (error) {
       console.error('Fehler beim Erstellen des Tasks:', error);
+      this.toastService.error('Task konnte nicht erstellt werden.');
     } finally {
       this.isSubmitting.set(false);
     }
