@@ -68,12 +68,6 @@ export class BoardPage {
         event.previousIndex,
         event.currentIndex,
       );
-
-      const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
-
-      if (refreshedBoard) {
-        this.boardStore.setBoard(refreshedBoard);
-      }
     } catch (error) {
       console.error('Fehler beim Verschieben des Tasks in Firestore:', error);
     }

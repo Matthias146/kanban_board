@@ -84,13 +84,6 @@ export class EditTaskDialog {
       return;
     }
 
-    const boardId = this.boardStore.boardId();
-
-    if (!boardId) {
-      console.error('Kein Board im Store vorhanden.');
-      return;
-    }
-
     const value = this.formModel();
 
     await this.boardCommandService.updateTask(this.task().id, {
@@ -100,31 +93,11 @@ export class EditTaskDialog {
       assignee: value.assignee,
     });
 
-    const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
-
-    if (refreshedBoard) {
-      this.boardStore.setBoard(refreshedBoard);
-    }
-
     this.closed.emit();
   }
 
   protected async confirmDelete(): Promise<void> {
-    const boardId = this.boardStore.boardId();
-
-    if (!boardId) {
-      console.error('Kein Board im Store vorhanden.');
-      return;
-    }
-
     await this.boardCommandService.deleteTask(this.task().id);
-
-    const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
-
-    if (refreshedBoard) {
-      this.boardStore.setBoard(refreshedBoard);
-    }
-
     this.closed.emit();
   }
 }
