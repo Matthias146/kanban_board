@@ -28,6 +28,7 @@ export class BoardPage {
   protected readonly loadError = signal<string | null>(null);
   private readonly destroyRef = inject(DestroyRef);
   private boardRealtimeUnsubscribe: Unsubscribe | null = null;
+  protected readonly isMovingTask = signal(false);
 
   constructor() {
     void this.loadKanbanBoardFromFirestore();
@@ -50,6 +51,10 @@ export class BoardPage {
   }
 
   protected async dropTask(event: CdkDragDrop<Task[]>): Promise<void> {
+    if (this.isMovingTask()) {
+      return;
+    }
+
     const boardId = this.boardStore.boardId();
 
     if (!boardId) {
@@ -59,6 +64,8 @@ export class BoardPage {
 
     const previousColumnId = event.previousContainer.id;
     const currentColumnId = event.container.id;
+
+    this.isMovingTask.set(true);
 
     try {
       await this.boardCommandService.moveTask(
@@ -70,6 +77,8 @@ export class BoardPage {
       );
     } catch (error) {
       console.error('Fehler beim Verschieben des Tasks in Firestore:', error);
+    } finally {
+      this.isMovingTask.set(false);
     }
   }
 

@@ -1,9 +1,7 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { BoardStore } from '../../data-access/board.store';
 import { EditTaskFormModel, Task } from '../../models/kanban.models';
 import { form, FormField, minLength, required } from '@angular/forms/signals';
 import { BoardCommandService } from '../../data-access/board-command.service';
-import { BoardQueryService } from '../../data-access/board-query.service';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -12,12 +10,11 @@ import { BoardQueryService } from '../../data-access/board-query.service';
   styleUrl: './edit-task-dialog.scss',
 })
 export class EditTaskDialog {
-  private readonly boardStore = inject(BoardStore);
   private readonly boardCommandService = inject(BoardCommandService);
-  private readonly boardQueryService = inject(BoardQueryService);
   readonly task = input.required<Task>();
   readonly closed = output<void>();
-
+  protected readonly isSubmitting = signal(false);
+  protected readonly isDeleting = signal(false);
   protected readonly showDeleteConfirm = signal(false);
 
   protected openDeleteConfirm(): void {
@@ -85,19 +82,34 @@ export class EditTaskDialog {
     }
 
     const value = this.formModel();
+    this.isSubmitting.set(true);
 
-    await this.boardCommandService.updateTask(this.task().id, {
-      title: value.title,
-      description: value.description,
-      priority: value.priority,
-      assignee: value.assignee,
-    });
+    try {
+      await this.boardCommandService.updateTask(this.task().id, {
+        title: value.title,
+        description: value.description,
+        priority: value.priority,
+        assignee: value.assignee,
+      });
 
-    this.closed.emit();
+      this.closed.emit();
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren des Tasks:', error);
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 
   protected async confirmDelete(): Promise<void> {
-    await this.boardCommandService.deleteTask(this.task().id);
-    this.closed.emit();
+    this.isDeleting.set(true);
+
+    try {
+      await this.boardCommandService.deleteTask(this.task().id);
+      this.closed.emit();
+    } catch (error) {
+      console.error('Fehler beim Löschen des Tasks:', error);
+    } finally {
+      this.isDeleting.set(false);
+    }
   }
 }

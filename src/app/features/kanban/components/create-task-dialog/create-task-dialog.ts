@@ -15,6 +15,7 @@ export class CreateTaskDialog {
   private readonly boardStore = inject(BoardStore);
   private readonly boardCommandService = inject(BoardCommandService);
   private readonly boardQueryService = inject(BoardQueryService);
+  protected readonly isSubmitting = signal(false);
 
   readonly closed = output<void>();
 
@@ -69,20 +70,21 @@ export class CreateTaskDialog {
     }
 
     const value = this.formModel();
+    this.isSubmitting.set(true);
 
-    await this.boardCommandService.createTaskInDefaultColumn(boardId, {
-      title: value.title,
-      description: value.description,
-      priority: value.priority,
-      assignee: value.assignee,
-    });
+    try {
+      await this.boardCommandService.createTaskInDefaultColumn(boardId, {
+        title: value.title,
+        description: value.description,
+        priority: value.priority,
+        assignee: value.assignee,
+      });
 
-    const refreshedBoard = await this.boardQueryService.getKanbanBoard(boardId);
-
-    if (refreshedBoard) {
-      this.boardStore.setBoard(refreshedBoard);
+      this.closed.emit();
+    } catch (error) {
+      console.error('Fehler beim Erstellen des Tasks:', error);
+    } finally {
+      this.isSubmitting.set(false);
     }
-
-    this.closed.emit();
   }
 }

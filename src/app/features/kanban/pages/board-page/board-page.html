@@ -40,6 +40,13 @@
             <span class="board-stat__label">Columns</span>
             <span class="board-stat__value">{{ boardStore.columns().length }}</span>
           </div>
+
+          @if (isMovingTask()) {
+            <div class="board-stat">
+              <span class="board-stat__label">Status</span>
+              <span class="board-stat__value">Syncing ...</span>
+            </div>
+          }
         </div>
 
         <button

@@ -21,7 +21,13 @@
         <p>Bestehende Aufgabe anpassen oder löschen.</p>
       </div>
 
-      <button type="button" class="icon-button" (click)="close()" aria-label="Dialog schließen">
+      <button
+        type="button"
+        class="icon-button"
+        (click)="close()"
+        aria-label="Dialog schließen"
+        [disabled]="isSubmitting() || isDeleting()"
+      >
         ✕
       </button>
     </header>
@@ -89,12 +95,22 @@
           </p>
 
           <div class="delete-confirm-actions">
-            <button type="button" class="secondary-button" (click)="closeDeleteConfirm()">
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="closeDeleteConfirm()"
+              [disabled]="isDeleting()"
+            >
               Abbrechen
             </button>
 
-            <button type="button" class="danger-button" (click)="confirmDelete()">
-              Ja, Task löschen
+            <button
+              type="button"
+              class="danger-button"
+              (click)="confirmDelete()"
+              [disabled]="isDeleting()"
+            >
+              {{ isDeleting() ? 'Wird gelöscht ...' : 'Ja, Task löschen' }}
             </button>
           </div>
         </div>
@@ -102,12 +118,28 @@
 
       <footer class="dialog-actions">
         @if (!showDeleteConfirm()) {
-          <button type="button" class="danger-button" (click)="openDeleteConfirm()">Löschen</button>
+          <button
+            type="button"
+            class="danger-button"
+            (click)="openDeleteConfirm()"
+            [disabled]="isSubmitting() || isDeleting()"
+          >
+            Löschen
+          </button>
         }
 
         <div class="dialog-actions-right">
-          <button type="button" class="secondary-button" (click)="close()">Abbrechen</button>
-          <button type="submit" class="primary-button">Änderungen speichern</button>
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="close()"
+            [disabled]="isSubmitting() || isDeleting()"
+          >
+            Abbrechen
+          </button>
+          <button type="submit" class="primary-button" [disabled]="isSubmitting() || isDeleting()">
+            {{ isSubmitting() ? 'Wird gespeichert ...' : 'Änderungen speichern' }}
+          </button>
         </div>
       </footer>
     </form>
