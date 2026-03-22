@@ -5,6 +5,8 @@ import { BoardPage } from './features/kanban/pages/board-page/board-page';
 import { authGuard } from './core/auth/guards/auth.guard';
 import { RegisterPage } from './features/auth/pages/register-page/register-page';
 import { guestOnlyGuard } from './core/auth/guards/guest-only.guard';
+import { ImprintPage } from './features/legal/pages/imprint-page/imprint-page';
+import { PrivacyPage } from './features/legal/pages/privacy-page/privacy-page';
 
 export const routes: Routes = [
   {
@@ -33,6 +35,8 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: 'imprint', component: ImprintPage },
+  { path: 'privacy', component: PrivacyPage },
   {
     path: '**',
     redirectTo: 'board',
