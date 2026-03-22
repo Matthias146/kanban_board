@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { CreateTaskDialog } from '../../components/create-task-dialog/create-task-dialog';
 import { EditTaskDialog } from '../../components/edit-task-dialog/edit-task-dialog';
 import { BoardStore } from '../../data-access/board.store';
@@ -8,6 +8,7 @@ import { AuthService } from '../../../auth/data-access/auth.service';
 import { BoardQueryService } from '../../data-access/board-query.service';
 import { BoardSeedService } from '../../data-access/board-seed.service';
 import { BoardCommandService } from '../../data-access/board-command.service';
+import { Unsubscribe } from 'firebase/firestore';
 
 @Component({
   selector: 'app-board-page',
@@ -25,6 +26,8 @@ export class BoardPage {
   protected readonly activeTask = signal<Task | null>(null);
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
+  private readonly destroyRef = inject(DestroyRef);
+  private boardRealtimeUnsubscribe: Unsubscribe | null = null;
 
   constructor() {
     void this.loadKanbanBoardFromFirestore();
@@ -103,6 +106,7 @@ export class BoardPage {
 
       if (!user) {
         this.boardStore.clearBoard();
+        this.isLoading.set(false);
         return;
       }
 
@@ -112,19 +116,34 @@ export class BoardPage {
         boardId = await this.boardSeedService.createInitialBoardForUser(user.uid);
       }
 
-      const board = await this.boardQueryService.getKanbanBoard(boardId);
+      this.boardRealtimeUnsubscribe?.();
 
-      if (!board) {
-        this.boardStore.clearBoard();
-        return;
-      }
+      this.boardRealtimeUnsubscribe = this.boardQueryService.listenToKanbanBoard(boardId, {
+        next: (board) => {
+          if (!board) {
+            this.boardStore.clearBoard();
+          } else {
+            this.boardStore.setBoard(board);
+          }
 
-      this.boardStore.setBoard(board);
+          this.isLoading.set(false);
+        },
+        error: (error) => {
+          console.error('Fehler beim Realtime-Laden des Kanban Boards:', error);
+          this.loadError.set('Das Board konnte nicht in Echtzeit geladen werden.');
+          this.boardStore.clearBoard();
+          this.isLoading.set(false);
+        },
+      });
+
+      this.destroyRef.onDestroy(() => {
+        this.boardRealtimeUnsubscribe?.();
+        this.boardRealtimeUnsubscribe = null;
+      });
     } catch (error) {
       console.error('Fehler beim Laden des Kanban Boards aus Firestore:', error);
       this.loadError.set('Das Board konnte nicht geladen werden.');
       this.boardStore.clearBoard();
-    } finally {
       this.isLoading.set(false);
     }
   }

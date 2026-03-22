@@ -1,5 +1,16 @@
 import { Injectable } from '@angular/core';
-import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  Unsubscribe,
+  where,
+} from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase.client';
 import { Board, Column, Task } from '../models/kanban.models';
 import { FirestoreBoard, FirestoreColumn, FirestoreTask } from '../models/firestore-board.model';
@@ -110,6 +121,111 @@ export class BoardQueryService {
       columnOrder,
       columns,
       tasks,
+    };
+  }
+
+  listenToKanbanBoard(
+    boardId: string,
+    handlers: {
+      next: (board: Board | null) => void;
+      error?: (error: unknown) => void;
+    },
+  ): Unsubscribe {
+    let boardTitle: string | null = null;
+    let columnsDocs: FirestoreColumn[] | null = null;
+    let tasksDocs: FirestoreTask[] | null = null;
+
+    const emitBoard = (): void => {
+      if (boardTitle === null || columnsDocs === null || tasksDocs === null) {
+        return;
+      }
+
+      const columns: Record<string, Column> = {};
+      const tasks: Record<string, Task> = {};
+      const columnOrder: string[] = [];
+
+      for (const columnDoc of columnsDocs) {
+        columns[columnDoc.id] = {
+          id: columnDoc.id,
+          title: columnDoc.title,
+          taskIds: [],
+        };
+
+        columnOrder.push(columnDoc.id);
+      }
+
+      for (const taskDoc of tasksDocs) {
+        tasks[taskDoc.id] = {
+          id: taskDoc.id,
+          title: taskDoc.title,
+          description: taskDoc.description,
+          priority: taskDoc.priority,
+          assignee: taskDoc.assignee,
+          createdAt: taskDoc.createdAt,
+          updatedAt: taskDoc.updatedAt,
+        };
+
+        const column = columns[taskDoc.columnId];
+
+        if (column) {
+          column.taskIds.push(taskDoc.id);
+        }
+      }
+
+      handlers.next({
+        id: boardId,
+        title: boardTitle,
+        columnOrder,
+        columns,
+        tasks,
+      });
+    };
+
+    const boardUnsubscribe = onSnapshot(
+      doc(db, 'boards', boardId),
+      (boardSnapshot) => {
+        if (!boardSnapshot.exists()) {
+          handlers.next(null);
+          return;
+        }
+
+        const data = boardSnapshot.data();
+        boardTitle = data['title'] as string;
+        emitBoard();
+      },
+      (error) => handlers.error?.(error),
+    );
+
+    const columnsUnsubscribe = onSnapshot(
+      query(collection(db, 'columns'), where('boardId', '==', boardId), orderBy('position')),
+      (columnsSnapshot) => {
+        columnsDocs = columnsSnapshot.docs.map((docSnapshot) => ({
+          id: docSnapshot.id,
+          ...docSnapshot.data(),
+        })) as FirestoreColumn[];
+
+        emitBoard();
+      },
+      (error) => handlers.error?.(error),
+    );
+
+    const tasksUnsubscribe = onSnapshot(
+      query(collection(db, 'tasks'), where('boardId', '==', boardId), orderBy('position')),
+      (tasksSnapshot) => {
+        tasksDocs = tasksSnapshot.docs.map((docSnapshot) => ({
+          id: docSnapshot.id,
+          ...docSnapshot.data(),
+        })) as FirestoreTask[];
+
+        emitBoard();
+      },
+      (error) => handlers.error?.(error),
+    );
+
+    return () => {
+      boardUnsubscribe();
+      columnsUnsubscribe();
+      tasksUnsubscribe();
     };
   }
 }
