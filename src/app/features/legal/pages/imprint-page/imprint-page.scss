@@ -26,7 +26,7 @@
 
 .legal-page__eyebrow {
   display: inline-block;
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.75rem 1rem;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -67,4 +67,36 @@ p {
 a {
   color: #bac3ff;
   text-decoration: none;
+}
+
+.legal-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(186, 195, 255, 0.12);
+  border-radius: 0.95rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.045);
+  color: #d7def8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(186, 195, 255, 0.18);
+    color: #eef3ff;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: rgba(97, 139, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(97, 139, 255, 0.18);
+  }
 }
